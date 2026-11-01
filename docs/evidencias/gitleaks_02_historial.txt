@@ -1,40 +1,40 @@
-Finding:     GITHUB_TOKEN = "[1;3;mREDACTED[0m
-Secret:      [1;3;mREDACTED[0m
-RuleID:      github-pat
-Entropy:     4.734184
-File:        config.py
-Line:        4
-Commit:      8262519f67be8f5d1f5ef262454676430429cf56
-Author:      Estudiante MASI
-Email:       estudiante@ejemplo.edu.gt
-Date:        2026-11-01T01:48:11Z
-Fingerprint: 8262519f67be8f5d1f5ef262454676430429cf56:config.py:github-pat:4
-
-Finding:     AWS_SECRET_ACCESS_KEY = "[1;3;mREDACTED[0m"
-Secret:      [1;3;mREDACTED[0m
-RuleID:      generic-api-key
-Entropy:     4.903056
-File:        config.py
-Line:        3
-Commit:      8262519f67be8f5d1f5ef262454676430429cf56
-Author:      Estudiante MASI
-Email:       estudiante@ejemplo.edu.gt
-Date:        2026-11-01T01:48:11Z
-Fingerprint: 8262519f67be8f5d1f5ef262454676430429cf56:config.py:generic-api-key:3
-
-Finding:     ...WS_ACCESS_KEY_ID = "[1;3;mREDACTED[0m
-Secret:      [1;3;mREDACTED[0m
+Finding:     REDACTED
+Secret:      REDACTED
 RuleID:      aws-access-token
-Entropy:     3.646439
+Entropy:     3.721928
 File:        config.py
 Line:        2
-Commit:      8262519f67be8f5d1f5ef262454676430429cf56
+Commit:      e94895278e406bb1dbeacc2f5fababc9321478bd
 Author:      Estudiante MASI
 Email:       estudiante@ejemplo.edu.gt
-Date:        2026-11-01T01:48:11Z
-Fingerprint: 8262519f67be8f5d1f5ef262454676430429cf56:config.py:aws-access-token:2
+Date:        2026-11-01T01:54:47Z
+Fingerprint: e94895278e406bb1dbeacc2f5fababc9321478bd:config.py:aws-access-token:2
 
-[90m7:48PM[0m [32mINF[0m [1m2 commits scanned.[0m
-[90m7:48PM[0m [32mINF[0m [1mscanned ~380 bytes (380 bytes) in 229ms[0m
-[90m7:48PM[0m [33mWRN[0m [1mleaks found: 3[0m
+Finding:     AWS_SECRET_ACCESS_KEY = "REDACTED"
+Secret:      REDACTED
+RuleID:      generic-api-key
+Entropy:     4.821928
+File:        config.py
+Line:        3
+Commit:      e94895278e406bb1dbeacc2f5fababc9321478bd
+Author:      Estudiante MASI
+Email:       estudiante@ejemplo.edu.gt
+Date:        2026-11-01T01:54:47Z
+Fingerprint: e94895278e406bb1dbeacc2f5fababc9321478bd:config.py:generic-api-key:3
+
+Finding:     REDACTED
+Secret:      REDACTED
+RuleID:      github-pat
+Entropy:     4.921928
+File:        config.py
+Line:        4
+Commit:      e94895278e406bb1dbeacc2f5fababc9321478bd
+Author:      Estudiante MASI
+Email:       estudiante@ejemplo.edu.gt
+Date:        2026-11-01T01:54:47Z
+Fingerprint: e94895278e406bb1dbeacc2f5fababc9321478bd:config.py:github-pat:4
+
+7:54PM INF 2 commits scanned.
+7:54PM INF scanned ~380 bytes (380 bytes) in 158ms
+7:54PM WRN leaks found: 3
 exit=1

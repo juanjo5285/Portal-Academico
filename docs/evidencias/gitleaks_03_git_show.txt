@@ -1,4 +1,4 @@
 # Configuración del portal (VERSIÓN INSEGURA)
-AWS_ACCESS_KEY_ID = "AKIA52…[recortado en la evidencia]"
-AWS_SECRET_ACCESS_KEY = "PjPlYd…[recortado en la evidencia]"
-GITHUB_TOKEN = "ghp_5j…[recortado en la evidencia]"
+AWS_ACCESS_KEY_ID = "AKIAQA…[recortado en la evidencia]"
+AWS_SECRET_ACCESS_KEY = "f1jFDU…[recortado en la evidencia]"
+GITHUB_TOKEN = "ghp_BM…[recortado en la evidencia]"

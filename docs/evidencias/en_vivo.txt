@@ -45,18 +45,18 @@ PRUEBA 7 · HTTPS
 ==============================================================================
 PRUEBA 8 · Inicio de sesión fallido en el log (sin contraseña)
 ==============================================================================
-  {"ts": "2026-10-31T19:52:47-0600", "level": "WARNING", "event": "login_fallido", "msg": "Inicio de sesión fallido", "user": "a***@ejemplo.edu.gt", "ip": "127.0.0.1", "motivo": "credenciales_invalidas"}
+  {"ts": "2026-10-31T19:54:50-0600", "level": "WARNING", "event": "login_fallido", "msg": "Inicio de sesión fallido", "user": "a***@ejemplo.edu.gt", "ip": "127.0.0.1", "motivo": "credenciales_invalidas"}
   ¿Aparece la contraseña probada?  False
 
 ==============================================================================
 PRUEBA 9 · Error interno
 ==============================================================================
-  HTTP 500 · lo que ve el usuario: <h1>Ocurrió un problema (500)</h1> <p>No fue posible completar la solicitud.</p> <p>Si el problema persiste, comunique este código a soporte: <code>20cf1165259d</code></p>
-    ¿respuesta contiene 'postgres://'…? False
-    ¿respuesta contiene 'Bearer'…? False
-    ¿respuesta contiene 'Traceback'…? False
-    ¿respuesta contiene '_EwuGhOw03Tr'…? False
-  Log interno (redactado): {"ts": "2026-10-31T19:52:47-0600", "level": "ERROR", "event": "error_interno", "msg": "Error interno", "incidente": "20cf1165259d", "ruta": "/lab/forzar-error", "exc": "Traceback (most recent call last):\\n  File \"/usr/local/lib/python3.13/site-packages/flask/app.py\", line 917, in full_dispatch_request\\n    rv = self.dispatch_request()\\n  File \"/usr/local/lib/python3.13/site-packages/flask/app.py\", line 902, in …
+  HTTP 500 · lo que ve el usuario: <h1>Ocurrió un problema (500)</h1> <p>No fue posible completar la solicitud.</p> <p>Si el problema persiste, comunique este código a soporte: <code>2b695e4157f3</code></p>
+    ¿la respuesta contiene cadena postgres://? False
+    ¿la respuesta contiene token Bearer? False
+    ¿la respuesta contiene traza Traceback? False
+    ¿la respuesta contiene valor de FLASK_SECRET_KEY? False
+  Log interno (redactado): {"ts": "2026-10-31T19:54:50-0600", "level": "ERROR", "event": "error_interno", "msg": "Error interno", "incidente": "2b695e4157f3", "ruta": "/lab/forzar-error", "exc": "Traceback (most recent call last):\\n  File \"/usr/local/lib/python3.13/site-packages/flask/app.py\", line 917, in full_dispatch_request\\n    rv = self.dispatch_request()\\n  File \"/usr/local/lib/python3.13/site-packages/flask/app.py\", line 902, in …
 
 ==============================================================================
 EXTRA · Inyección de comandos en reportes
@@ -75,5 +75,5 @@ EXTRA · DPI cifrado en la base de datos
 ==============================================================================
 EXTRA · Registro inseguro (endpoint vulnerable) vs. seguro
 ==============================================================================
-[INSEGURO] 2026-10-31 19:52:47,860 login user=ana.perez@ejemplo.edu.gt password=ClaveFicticia#2026 token=Bearer tok_ficticio_abc123
-[SEGURO  ] {"ts": "2026-10-31T19:52:47-0600", "level": "INFO", "event": "login_ok", "msg": "Inicio de sesión exitoso", "user_id": 1, "rol": "admin", "ip": "127.0.0.1"}
+[INSEGURO] 2026-10-31 19:54:50,381 login user=ana.perez@ejemplo.edu.gt password=ClaveFicticia#2026 token=Bearer tok_ficticio_abc123
+[SEGURO  ] {"ts": "2026-10-31T19:54:49-0600", "level": "INFO", "event": "login_ok", "msg": "Inicio de sesión exitoso", "user_id": 1, "rol": "admin", "ip": "127.0.0.1"}

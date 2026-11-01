@@ -88,8 +88,9 @@ print("  ¿Aparece la contraseña probada? ", "Contraseña-Incorrecta-123" in "\
 titulo("PRUEBA 9 · Error interno")
 r = admin.get(f"{BASE}/lab/forzar-error")
 print(f"  HTTP {r.status_code} · lo que ve el usuario:", re.sub(r"\s+", " ", re.search(r"<main>(.*)</main>", r.text, re.S).group(1)).strip())
-for fuga in ["postgres://", "Bearer", "Traceback", os.environ["FLASK_SECRET_KEY"]]:
-    print(f"    ¿respuesta contiene {fuga[:12]!r}…? {fuga in r.text}")
+for nombre, fuga in [("cadena postgres://", "postgres://"), ("token Bearer", "Bearer"),
+                     ("traza Traceback", "Traceback"), ("valor de FLASK_SECRET_KEY", os.environ["FLASK_SECRET_KEY"])]:
+    print(f"    ¿la respuesta contiene {nombre}? {fuga in r.text}")
 err = [l for l in Path("lab/seguridad.log").read_text(encoding="utf-8").splitlines() if '"error_interno"' in l][-1]
 print("  Log interno (redactado):", err[:420], "…")
 

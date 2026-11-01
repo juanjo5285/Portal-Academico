@@ -2,6 +2,7 @@
 import socket
 import ssl
 import subprocess
+import sys
 import threading
 from pathlib import Path
 
@@ -15,7 +16,7 @@ ROOT = Path(__file__).resolve().parent.parent
 
 @pytest.fixture()
 def https_server(app, tmp_path):
-    subprocess.run(["bash", str(ROOT / "scripts/gen_cert.sh")], cwd=tmp_path, check=True, capture_output=True)
+    subprocess.run([sys.executable, str(ROOT / "scripts/gen_cert.py")], cwd=tmp_path, check=True, capture_output=True)
     ctx = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
     ctx.minimum_version = ssl.TLSVersion.TLSv1_2
     ctx.set_ciphers("ECDHE+AESGCM:ECDHE+CHACHA20")

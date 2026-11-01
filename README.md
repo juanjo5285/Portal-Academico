@@ -13,7 +13,7 @@ control pedido en la tarea, con pruebas automáticas que demuestran que la corre
 python -m venv .venv && source .venv/bin/activate      # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 python scripts/gen_env.py          # crea .env con secretos aleatorios (permisos 600, ignorado por Git)
-bash scripts/gen_cert.sh           # CA de laboratorio + certificado para localhost (requiere openssl)
+python scripts/gen_cert.py         # CA de laboratorio + certificado para localhost
 python run.py                      # https://localhost:8443  (TLS 1.2+, preferente 1.3)
 ```
 

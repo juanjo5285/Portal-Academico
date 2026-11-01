@@ -1,6 +1,6 @@
 """Arranca el portal con HTTPS (TLS 1.2+; se prefiere TLS 1.3).
 
-Uso:  python scripts/gen_env.py && bash scripts/gen_cert.sh && python run.py
+Uso:  python scripts/gen_env.py && python scripts/gen_cert.py && python run.py
 """
 import os
 import ssl

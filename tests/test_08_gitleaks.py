@@ -9,7 +9,8 @@ import pytest
 ROOT = Path(__file__).resolve().parent.parent
 
 
-@pytest.mark.skipif(shutil.which("gitleaks") is None, reason="gitleaks no instalado")
+@pytest.mark.skipif(shutil.which("gitleaks") is None or shutil.which("bash") is None,
+                    reason="requiere gitleaks y bash (en Windows: ejecutar desde Git Bash)")
 def test_gitleaks_detecta_fuga_en_historial(tmp_path):
     out = tmp_path / "evid"
     r = subprocess.run(["bash", "scripts/gitleaks_demo.sh", str(tmp_path / "repo"), str(out)],

@@ -71,7 +71,7 @@ print(f"  HTTP {r.status_code} · mensaje: {re.search(r'class=.flash.>(.*?)<', r
 
 titulo("PRUEBA 6 · Secreto obtenido desde fuente externa")
 print("  grep de secretos en app/:",
-      [l for l in Path("app/__init__.py").read_text().splitlines() if "get_secret(" in l][:3])
+      [l for l in Path("app/__init__.py").read_text(encoding="utf-8").splitlines() if "get_secret(" in l][:3])
 print("  Origen: variables de entorno cargadas desde .env (permisos",
       oct(os.stat('.env').st_mode & 0o777), ") — el archivo está en .gitignore")
 
@@ -97,9 +97,9 @@ print("  Log interno: incidente", ev["incidente"], "· última línea de la traz
 print("   ", ev["exc"].split("\\n")[-1])
 
 titulo("EXTRA · Inyección de comandos en reportes")
-marca = Path("lab/PWNED")
+marca = Path("lab/PWNED").resolve()
 marca.unlink(missing_ok=True)
-v = requests.get(f"{BASE}/lab/vuln/reporte", params={"nombre": f"x; touch {marca}; echo"}, verify=CA).json()
+v = requests.get(f"{BASE}/lab/vuln/reporte", params={"nombre": (f'x & type nul > "{marca}" & echo' if os.name == "nt" else f'x; touch "{marca}"; echo')}, verify=CA).json()
 print(f"[VULNERABLE] cmd: {v['cmd']}\n             ¿se creó {marca}? {marca.exists()}")
 marca.unlink(missing_ok=True)
 r = admin.post(f"{BASE}/reportes", data={"carnet": f"1290-23-10001; touch {marca}", "tipo": "notas", "csrf": admin.csrf})

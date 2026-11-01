@@ -11,7 +11,7 @@ import json
 import logging
 import re
 import sys
-import time
+from datetime import datetime
 import uuid
 
 SENSITIVE_KEYS = re.compile(
@@ -51,7 +51,7 @@ def _scrub(value):
 class JsonFormatter(logging.Formatter):
     def format(self, record):
         event = {
-            "ts": time.strftime("%Y-%m-%dT%H:%M:%S%z", time.localtime(record.created)),
+            "ts": datetime.fromtimestamp(record.created).astimezone().isoformat(timespec="seconds"),
             "level": record.levelname,
             "event": getattr(record, "event", "app"),
             "msg": record.getMessage(),

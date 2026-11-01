@@ -16,9 +16,9 @@ def test_gitleaks_detecta_fuga_en_historial(tmp_path):
     r = subprocess.run(["bash", "scripts/gitleaks_demo.sh", str(tmp_path / "repo"), str(out)],
                        cwd=ROOT, capture_output=True, text=True)
     assert r.returncode == 1                                       # gitleaks: 1 = fugas encontradas
-    assert "no leaks found" in (out / "gitleaks_01_dir_actual.txt").read_text()   # HEAD parece limpio
-    hallazgos = json.loads((out / "gitleaks_02_historial.json").read_text())
+    assert "no leaks found" in (out / "gitleaks_01_dir_actual.txt").read_text(encoding="utf-8")   # HEAD parece limpio
+    hallazgos = json.loads((out / "gitleaks_02_historial.json").read_text(encoding="utf-8"))
     reglas = {h["RuleID"] for h in hallazgos}
     assert {"aws-access-token", "github-pat"} <= reglas
     assert all(h["Secret"] == "REDACTED" for h in hallazgos)       # la evidencia no repite el secreto
-    assert "no leaks found" in (out / "gitleaks_04_tras_limpieza.txt").read_text()
+    assert "no leaks found" in (out / "gitleaks_04_tras_limpieza.txt").read_text(encoding="utf-8")

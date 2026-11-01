@@ -6,6 +6,7 @@ corregido. NUNCA habilitar fuera del laboratorio.
 """
 import hashlib
 import logging
+import os
 import subprocess
 
 from flask import Blueprint, current_app, render_template_string, request
@@ -54,9 +55,11 @@ def comentarios():
 def reporte():
     nombre = request.args.get("nombre", "reporte")
     out = current_app.config["REPORT_DIR"]
-    # [VULNERABLE] inyección de comandos: cadena interpretada por /bin/sh
-    cmd = f"mkdir -p {out} && echo curso,nota > {out}/{nombre}.csv && tar -czf {out}/{nombre}.tar.gz -C {out} {nombre}.csv"
-    r = subprocess.run(cmd, shell=True, capture_output=True, text=True)
+    os.makedirs(out, exist_ok=True)
+    # [VULNERABLE] inyección de comandos: la cadena la interpreta el shell
+    # (/bin/sh en Linux/Mac, cmd.exe en Windows), que procesa ; & | $() etc.
+    cmd = f"echo curso,nota > {nombre}.csv && tar -czf {nombre}.tar.gz {nombre}.csv"
+    r = subprocess.run(cmd, shell=True, capture_output=True, text=True, cwd=out)
     return {"cmd": cmd, "rc": r.returncode}
 
 

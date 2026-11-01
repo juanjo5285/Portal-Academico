@@ -1,5 +1,6 @@
 """Fase II-C y prueba obligatoria 6: el secreto viene de una fuente externa."""
 import json
+import shutil
 import subprocess
 import threading
 from http.server import BaseHTTPRequestHandler, HTTPServer
@@ -25,7 +26,7 @@ def test_falla_cerrado_si_falta(monkeypatch, env):
 
 
 def test_secreto_desde_archivo_run_secrets(monkeypatch, tmp_path):
-    (tmp_path / "SMTP_PASSWORD").write_text("ficticio-desde-archivo\n")
+    (tmp_path / "SMTP_PASSWORD").write_text("ficticio-desde-archivo\n", encoding="utf-8")
     monkeypatch.setenv("SECRETS_DIR", str(tmp_path))
     monkeypatch.delenv("SMTP_PASSWORD", raising=False)
     assert config.get_secret("SMTP_PASSWORD") == "ficticio-desde-archivo"
@@ -53,7 +54,7 @@ def test_secreto_desde_vault(monkeypatch):
     srv.shutdown()
 
 
-@pytest.mark.skipif(subprocess.run(["which", "gitleaks"], capture_output=True).returncode, reason="gitleaks no instalado")
+@pytest.mark.skipif(shutil.which("gitleaks") is None, reason="gitleaks no instalado")
 def test_codigo_fuente_sin_secretos():
     r = subprocess.run(["gitleaks", "dir", str(ROOT / "app"), "--no-banner", "--no-color", "--redact"],
                        capture_output=True, text=True)

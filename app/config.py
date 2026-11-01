@@ -39,7 +39,7 @@ def _from_vault(name: str):
 def _from_file(name: str):
     p = Path(os.environ.get("SECRETS_DIR", "/run/secrets")) / name
     if p.is_file():
-        return p.read_text().strip()
+        return p.read_text(encoding="utf-8").strip()
     return None
 
 

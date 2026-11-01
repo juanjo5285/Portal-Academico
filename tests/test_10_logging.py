@@ -49,7 +49,7 @@ def test_registro_inseguro_vs_seguro(app, env, tmp_path):
     c.post("/lab/vuln/registro", data={"email": "est@ejemplo.edu.gt", "password": PWD_MALA},
            headers={"Authorization": "Bearer token-ficticio-123"})
     for h in logging.getLogger("inseguro").handlers: h.flush()
-    inseguro = (tmp_path / "inseguro.log").read_text()
+    inseguro = (tmp_path / "inseguro.log").read_text(encoding="utf-8")
     print("\n[log INSEGURO]", inseguro.strip())
     assert PWD_MALA in inseguro and "token-ficticio-123" in inseguro
     assert PWD_MALA not in read_log(env)

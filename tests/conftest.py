@@ -78,3 +78,10 @@ def est(app):
 def read_log(env):
     p = Path(env["LOG_PATH"])
     return p.read_text(encoding="utf-8") if p.exists() else ""
+
+
+def inyeccion(marca):
+    """Carga que crea el archivo `marca` si el shell interpreta el texto (Windows o Linux/Mac)."""
+    if os.name == "nt":
+        return f'x & type nul > "{marca}" & echo'
+    return f'x; touch "{marca}"; echo'

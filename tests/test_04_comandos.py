@@ -2,12 +2,12 @@
 import tarfile
 from pathlib import Path
 
-from conftest import post
+from conftest import inyeccion, post
 
 
 def test_vulnerable_ejecuta_comando_inyectado(cat, tmp_path):
     marca = tmp_path / "PWNED"
-    r = cat.get("/lab/vuln/reporte", query_string={"nombre": f"x; touch {marca}; echo"})
+    r = cat.get("/lab/vuln/reporte", query_string={"nombre": inyeccion(marca)})
     assert marca.exists(), "el ; permitió ejecutar un segundo comando"
     print("\n[cmd vulnerable]", r.json["cmd"])
 
@@ -43,4 +43,5 @@ def test_build_report_usa_lista_sin_shell(monkeypatch, tmp_path):
     monkeypatch.setattr(reports.subprocess, "run", spy)
     reports.build_report([{"curso": "=HYPERLINK(\"http://x\")", "nota": 90}], "1290-23-10001", "notas", tmp_path)
     assert isinstance(seen["args"], list) and seen["shell"] is False and seen["timeout"] == 10
-    assert "--" in seen["args"] and seen["env"] == {"PATH": "/usr/bin:/bin", "LANG": "C.UTF-8"}
+    assert "--" in seen["args"]
+    assert not any(k.startswith(("FLASK_", "DATA_KEY", "ADMIN_")) for k in seen["env"])   # sin secretos heredados

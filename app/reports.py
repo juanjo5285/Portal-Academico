@@ -19,7 +19,13 @@ import subprocess
 import tempfile
 from pathlib import Path
 
-TAR = shutil.which("tar") or "/usr/bin/tar"
+TAR = shutil.which("tar") or "/usr/bin/tar"   # Windows 10+ incluye tar.exe (bsdtar)
+
+# Entorno mínimo: el hijo NO hereda variables con secretos (FLASK_SECRET_KEY, DATA_KEY...).
+if os.name == "nt":
+    MIN_ENV = {"SYSTEMROOT": os.environ.get("SYSTEMROOT", r"C:\Windows"), "PATH": os.path.dirname(TAR)}
+else:
+    MIN_ENV = {"PATH": "/usr/bin:/bin", "LANG": "C.UTF-8"}
 
 
 def build_report(rows, carnet: str, tipo: str, out_dir: Path) -> Path:
@@ -44,6 +50,6 @@ def build_report(rows, carnet: str, tipo: str, out_dir: Path) -> Path:
         subprocess.run(
             [TAR, "-czf", str(out), "-C", tmp, "--", csv_name],
             shell=False, check=True, timeout=10,
-            env={"PATH": "/usr/bin:/bin", "LANG": "C.UTF-8"},
+            env=MIN_ENV,
             stdin=subprocess.DEVNULL, capture_output=True, **kwargs)
     return out

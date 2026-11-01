@@ -10,7 +10,7 @@ def load_env(path=".env"):
         return
     if os.name == "posix" and p.stat().st_mode & 0o077:
         print(f"[ADVERTENCIA] {path} es legible por otros usuarios; ejecute: chmod 600 {path}")
-    for line in p.read_text().splitlines():
+    for line in p.read_text(encoding="utf-8").splitlines():
         line = line.strip()
         if line and not line.startswith("#") and "=" in line:
             k, v = line.split("=", 1)

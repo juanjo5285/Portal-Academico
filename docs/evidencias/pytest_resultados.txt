@@ -52,23 +52,23 @@ tests/test_03_xss.py::test_corregido_codifica_salida PASSED
 tests/test_03_xss.py::test_dom_seguro_usa_textcontent PASSED
 tests/test_03_xss.py::test_cookie_sesion_httponly PASSED
 tests/test_04_comandos.py::test_vulnerable_ejecuta_comando_inyectado 
-[cmd vulnerable] mkdir -p /tmp/pytest-of-root/pytest-9/test_vulnerable_ejecuta_comand0/reportes && echo curso,nota > /tmp/pytest-of-root/pytest-9/test_vulnerable_ejecuta_comand0/reportes/x; touch /tmp/pytest-of-root/pytest-9/test_vulnerable_ejecuta_comand0/PWNED; echo.csv && tar -czf /tmp/pytest-of-root/pytest-9/test_vulnerable_ejecuta_comand0/reportes/x; touch /tmp/pytest-of-root/pytest-9/test_vulnerable_ejecuta_comand0/PWNED; echo.tar.gz -C /tmp/pytest-of-root/pytest-9/test_vulnerable_ejecuta_comand0/reportes x; touch /tmp/pytest-of-root/pytest-9/test_vulnerable_ejecuta_comand0/PWNED; echo.csv
+[cmd vulnerable] echo curso,nota > x; touch "/tmp/pytest-of-root/pytest-16/test_vulnerable_ejecuta_comand0/PWNED"; echo.csv && tar -czf x; touch "/tmp/pytest-of-root/pytest-16/test_vulnerable_ejecuta_comand0/PWNED"; echo.tar.gz x; touch "/tmp/pytest-of-root/pytest-16/test_vulnerable_ejecuta_comand0/PWNED"; echo.csv
 PASSED
 tests/test_04_comandos.py::test_corregido_rechaza_y_no_ejecuta PASSED
 tests/test_04_comandos.py::test_corregido_genera_reporte PASSED
 tests/test_04_comandos.py::test_build_report_usa_lista_sin_shell PASSED
 tests/test_05_passwords.py::test_hash_argon2id_con_sal 
-[hash almacenado] $argon2id$v=19$m=65536,t=3,p=1$C7e/IB4+RPk8lOx9mWjISQ$xSGtOuPPv75XEtPyTPlbsrjTqTLwX3MM99UTyX8Qwok
+[hash almacenado] $argon2id$v=19$m=65536,t=3,p=1$vzsku1bEgXqmHuXrl80c+Q$Xm9IRlxzfZU2wi6qdIsmzaGbBZrtiOohgu22AywrawQ
 PASSED
 tests/test_05_passwords.py::test_misma_clave_hash_distinto PASSED
 tests/test_05_passwords.py::test_sha256_sin_sal_es_determinista_y_rapido 
-[SHA-256] 0.58 µs/intento  [Argon2id] 189 ms/intento  -> 323,763x más costoso
+[SHA-256] 0.29 µs/intento  [Argon2id] 161 ms/intento  -> 551,767x más costoso
 PASSED
 tests/test_05_passwords.py::test_login_correcto PASSED
 tests/test_05_passwords.py::test_login_incorrecto_rechazado PASSED
 tests/test_05_passwords.py::test_registro_guarda_hash PASSED
 tests/test_06_cifrado.py::test_bd_no_contiene_dpi_en_claro 
-[dpi en BD] enc:v1:Ze5FgxAA9tjz97NrM6ydfGAc4fXnHjN+Fi5Y0aXZdRa9VI8/B2Y7kbmYgA==
+[dpi en BD] enc:v1:wHlTtti5TFdYFwAbkTAhPjd2+tCX6y8cj9yjnI+QOC1v8uG+IuN8g5XO+A==
 PASSED
 tests/test_06_cifrado.py::test_expediente_muestra_dpi_enmascarado PASSED
 tests/test_06_cifrado.py::test_estudiante_no_ve_expediente_ajeno PASSED
@@ -80,8 +80,8 @@ tests/test_07_secretos.py::test_secreto_desde_variable_de_entorno PASSED
 tests/test_07_secretos.py::test_falla_cerrado_si_falta PASSED
 tests/test_07_secretos.py::test_secreto_desde_archivo_run_secrets PASSED
 tests/test_07_secretos.py::test_secreto_desde_vault PASSED
-tests/test_07_secretos.py::test_codigo_fuente_sin_secretos  7:55PM INF scanned ~96808 bytes (96.81 KB) in 21.4ms
-7:55PM INF no leaks found
+tests/test_07_secretos.py::test_codigo_fuente_sin_secretos  8:13PM INF scanned ~97646 bytes (97.65 KB) in 29.3ms
+8:13PM INF no leaks found
 
 PASSED
 tests/test_08_gitleaks.py::test_gitleaks_detecta_fuga_en_historial PASSED
@@ -91,18 +91,18 @@ PASSED
 tests/test_09_tls.py::test_rechaza_tls_antiguo PASSED
 tests/test_09_tls.py::test_cliente_rechaza_certificado_no_confiable PASSED
 tests/test_10_logging.py::test_login_fallido_registra_sin_contrasena 
-[evento] {"ts": "2026-10-31T19:55:32-0600", "level": "WARNING", "event": "login_fallido", "msg": "Inicio de sesión fallido", "user": "e***@ejemplo.edu.gt", "ip": "127.0.0.1", "motivo": "credenciales_invalidas"}
+[evento] {"ts": "2026-10-31T20:13:40-06:00", "level": "WARNING", "event": "login_fallido", "msg": "Inicio de sesión fallido", "user": "e***@ejemplo.edu.gt", "ip": "127.0.0.1", "motivo": "credenciales_invalidas"}
 PASSED
 tests/test_10_logging.py::test_eventos_de_auditoria PASSED
 tests/test_10_logging.py::test_filtro_redacta_aunque_el_desarrollador_se_equivoque 
-[evento redactado] {"ts": "2026-10-31T19:55:34-0600", "level": "INFO", "event": "prueba", "msg": "conexion password=[REDACTADO] user=x\\nFALSO login_ok admin", "token": "[REDACTADO]", "authorization": "[REDACTADO]", "dsn": "[REDACTADO]", "dpi": "[REDACTADO]", "nota": "[AWS-KEY-REDACTADA]"}
+[evento redactado] {"ts": "2026-10-31T20:13:42-06:00", "level": "INFO", "event": "prueba", "msg": "conexion password=[REDACTADO] user=x\\nFALSO login_ok admin", "token": "[REDACTADO]", "authorization": "[REDACTADO]", "dsn": "[REDACTADO]", "dpi": "[REDACTADO]", "nota": "[AWS-KEY-REDACTADA]"}
 PASSED
 tests/test_10_logging.py::test_registro_inseguro_vs_seguro 
-[log INSEGURO] 2026-10-31 19:55:35,101 login user=est@ejemplo.edu.gt password=MiClaveSecreta-Equivocada-77 token=Bearer token-ficticio-123
+[log INSEGURO] 2026-10-31 20:13:42,523 login user=est@ejemplo.edu.gt password=MiClaveSecreta-Equivocada-77 token=Bearer token-ficticio-123
 PASSED
 tests/test_10_logging.py::test_error_interno_no_expone_detalles 
-[usuario ve] código de incidente 6f444eca5a48
-[log interno] {"ts": "2026-10-31T19:55:35-0600", "level": "ERROR", "event": "error_interno", "msg": "Error interno", "incidente": "6f444eca5a48", "ruta": "/lab/forzar-error", "exc": "Traceback (most recent call last):\\n  File \"/usr/local/lib/python3.13/site-packages/flask/app.py\", line 917, in full_dispatch_request\\n    rv = self.dispatch_request()\\n  File \"/usr/local/lib/python3.13/site-packages/flask/ap
+[usuario ve] código de incidente 2c41ecbca942
+[log interno] {"ts": "2026-10-31T20:13:43-06:00", "level": "ERROR", "event": "error_interno", "msg": "Error interno", "incidente": "2c41ecbca942", "ruta": "/lab/forzar-error", "exc": "Traceback (most recent call last):\\n  File \"/usr/local/lib/python3.13/site-packages/flask/app.py\", line 917, in full_dispatch_request\\n    rv = self.dispatch_request()\\n  File \"/usr/local/lib/python3.13/site-packages/flask/a
 PASSED
 
-============================= 58 passed in 23.43s ==============================
+============================= 58 passed in 23.76s ==============================

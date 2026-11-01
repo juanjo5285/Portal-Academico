@@ -44,7 +44,7 @@ def _scrub(value):
         value = value.replace("\r", "\\r").replace("\n", "\\n")
         for rx, rep in PATTERNS:
             value = rx.sub(rep, value)
-        return value[:500]
+        return value[:4000]   # límite para evitar inundar el log
     return value
 
 

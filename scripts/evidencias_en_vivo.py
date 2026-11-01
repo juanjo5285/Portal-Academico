@@ -92,7 +92,9 @@ for nombre, fuga in [("cadena postgres://", "postgres://"), ("token Bearer", "Be
                      ("traza Traceback", "Traceback"), ("valor de FLASK_SECRET_KEY", os.environ["FLASK_SECRET_KEY"])]:
     print(f"    ¿la respuesta contiene {nombre}? {fuga in r.text}")
 err = [l for l in Path("lab/seguridad.log").read_text(encoding="utf-8").splitlines() if '"error_interno"' in l][-1]
-print("  Log interno (redactado):", err[:420], "…")
+ev = json.loads(err)
+print("  Log interno: incidente", ev["incidente"], "· última línea de la traza (redactada):")
+print("   ", ev["exc"].split("\\n")[-1])
 
 titulo("EXTRA · Inyección de comandos en reportes")
 marca = Path("lab/PWNED")

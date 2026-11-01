@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><title>Portal Académico (laboratorio)</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='estilo.css') }}"></head>
+<body>
+<header><strong>Portal Académico · Laboratorio MASI</strong>
+{% if session.uid %}<nav><a href="{{ url_for('portal.inicio') }}">Inicio</a>
+<a href="{{ url_for('portal.comentarios') }}">Comentarios</a>
+<a href="{{ url_for('portal.buscar') }}">Búsqueda</a>
+<form method="post" action="{{ url_for('portal.logout') }}" class="inline">
+<input type="hidden" name="csrf" value="{{ session.csrf }}"><button>Salir</button></form></nav>{% endif %}
+</header>
+<main>
+{% for m in get_flashed_messages() %}<p class="flash">{{ m }}</p>{% endfor %}
+{% block body %}{% endblock %}
+</main></body></html>

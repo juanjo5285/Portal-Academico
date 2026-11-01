@@ -1,0 +1,108 @@
+============================= test session starts ==============================
+platform linux -- Python 3.13.18, pytest-9.1.1, pluggy-1.6.0 -- /usr/local/bin/python3
+rootdir: /home/claude/portal-seguro
+plugins: platformdirs-4.13.3, anyio-4.15.1
+collecting ... collected 58 items
+
+tests/test_01_validacion.py::test_email_valido[ana.perez@ejemplo.edu.gt] PASSED
+tests/test_01_validacion.py::test_email_valido[  ANA@Ejemplo.EDU.gt ] PASSED
+tests/test_01_validacion.py::test_email_invalido[sin-arroba] PASSED
+tests/test_01_validacion.py::test_email_invalido[a@b] PASSED
+tests/test_01_validacion.py::test_email_invalido[a@b.c] PASSED
+tests/test_01_validacion.py::test_email_invalido[x@y.com\r\nBcc: z@z.com] PASSED
+tests/test_01_validacion.py::test_email_invalido[<script>@x.com] PASSED
+tests/test_01_validacion.py::test_email_invalido[aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa] PASSED
+tests/test_01_validacion.py::test_carnet PASSED
+tests/test_01_validacion.py::test_nombres_unicode_y_apostrofo PASSED
+tests/test_01_validacion.py::test_nota_valida[0-0] PASSED
+tests/test_01_validacion.py::test_nota_valida[100-100] PASSED
+tests/test_01_validacion.py::test_nota_valida[87.456-87.46] PASSED
+tests/test_01_validacion.py::test_nota_invalida[-1] PASSED
+tests/test_01_validacion.py::test_nota_invalida[101] PASSED
+tests/test_01_validacion.py::test_nota_invalida[NaN] PASSED
+tests/test_01_validacion.py::test_nota_invalida[inf] PASSED
+tests/test_01_validacion.py::test_nota_invalida[abc] PASSED
+tests/test_01_validacion.py::test_nota_invalida[1e9] PASSED
+tests/test_01_validacion.py::test_validar_no_es_suficiente PASSED
+tests/test_02_sqli.py::test_vulnerable_altera_sql 
+[vulnerable normal ] SELECT carnet, nombres, apellidos FROM estudiantes WHERE nombres LIKE ? OR apellidos LIKE ?
+[vulnerable atacada] SELECT carnet, nombres, apellidos FROM estudiantes WHERE nombres LIKE ? UNION SELECT clave, valor, 1 FROM config_interna --%?%x?
+PASSED
+tests/test_02_sqli.py::test_corregido_no_altera_sql 
+[payload] "' OR '1'='1"
+[sql con valor enlazado] SELECT carnet, nombres, apellidos FROM estudiantes WHERE nombres LIKE '%'' OR ''1''=''1%' ESCAPE '\' OR apellidos LIKE '%'' OR ''1''=''1%' ESCAPE '\' ORDER BY apellidos LIMIT 50
+
+[payload] "%' OR 1=1 --"
+[sql con valor enlazado] SELECT carnet, nombres, apellidos FROM estudiantes WHERE nombres LIKE '%\%'' OR 1=1 --%' ESCAPE '\' OR apellidos LIKE '%\%'' OR 1=1 --%' ESCAPE '\' ORDER BY apellidos LIMIT 50
+
+[payload] "x' UNION SELECT clave, valor, 1 FROM config_interna --"
+[sql con valor enlazado] SELECT carnet, nombres, apellidos FROM estudiantes WHERE nombres LIKE '%x'' UNION SELECT clave, valor, 1 FROM config\_interna --%' ESCAPE '\' OR apellidos LIKE '%x'' UNION SELECT clave, valor, 1 FROM config\_interna --%' ESCAPE '\' ORDER BY apellidos LIMIT 50
+
+[payload] "O'Brien"
+[sql con valor enlazado] SELECT carnet, nombres, apellidos FROM estudiantes WHERE nombres LIKE '%O''Brien%' ESCAPE '\' OR apellidos LIKE '%O''Brien%' ESCAPE '\' ORDER BY apellidos LIMIT 50
+
+[payload] 'Ana'
+[sql con valor enlazado] SELECT carnet, nombres, apellidos FROM estudiantes WHERE nombres LIKE '%Ana%' ESCAPE '\' OR apellidos LIKE '%Ana%' ESCAPE '\' ORDER BY apellidos LIMIT 50
+
+[estructura única para todas las entradas] SELECT carnet, nombres, apellidos FROM estudiantes WHERE nombres LIKE ? ESCAPE ? OR apellidos LIKE ? ESCAPE ? ORDER BY apellidos LIMIT 50
+PASSED
+tests/test_02_sqli.py::test_comodines_like_literales PASSED
+tests/test_03_xss.py::test_vulnerable_almacenado_y_reflejado PASSED
+tests/test_03_xss.py::test_corregido_codifica_salida PASSED
+tests/test_03_xss.py::test_dom_seguro_usa_textcontent PASSED
+tests/test_03_xss.py::test_cookie_sesion_httponly PASSED
+tests/test_04_comandos.py::test_vulnerable_ejecuta_comando_inyectado 
+[cmd vulnerable] mkdir -p /tmp/pytest-of-root/pytest-8/test_vulnerable_ejecuta_comand0/reportes && echo curso,nota > /tmp/pytest-of-root/pytest-8/test_vulnerable_ejecuta_comand0/reportes/x; touch /tmp/pytest-of-root/pytest-8/test_vulnerable_ejecuta_comand0/PWNED; echo.csv && tar -czf /tmp/pytest-of-root/pytest-8/test_vulnerable_ejecuta_comand0/reportes/x; touch /tmp/pytest-of-root/pytest-8/test_vulnerable_ejecuta_comand0/PWNED; echo.tar.gz -C /tmp/pytest-of-root/pytest-8/test_vulnerable_ejecuta_comand0/reportes x; touch /tmp/pytest-of-root/pytest-8/test_vulnerable_ejecuta_comand0/PWNED; echo.csv
+PASSED
+tests/test_04_comandos.py::test_corregido_rechaza_y_no_ejecuta PASSED
+tests/test_04_comandos.py::test_corregido_genera_reporte PASSED
+tests/test_04_comandos.py::test_build_report_usa_lista_sin_shell PASSED
+tests/test_05_passwords.py::test_hash_argon2id_con_sal 
+[hash almacenado] $argon2id$v=19$m=65536,t=3,p=1$lfxPgiFwSAGQFcOgPsTmpw$54PdOMuyt8YrIG6tF/4JZikLA+hLTfHvVboGz6Izoqw
+PASSED
+tests/test_05_passwords.py::test_misma_clave_hash_distinto PASSED
+tests/test_05_passwords.py::test_sha256_sin_sal_es_determinista_y_rapido 
+[SHA-256] 0.28 µs/intento  [Argon2id] 151 ms/intento  -> 533,379x más costoso
+PASSED
+tests/test_05_passwords.py::test_login_correcto PASSED
+tests/test_05_passwords.py::test_login_incorrecto_rechazado PASSED
+tests/test_05_passwords.py::test_registro_guarda_hash PASSED
+tests/test_06_cifrado.py::test_bd_no_contiene_dpi_en_claro 
+[dpi en BD] enc:v1:QrrwtKB3Mjayp8ruDM7h+S0gmnDKFlfAaeeA6yUwcYsAdbc7iwMp9BauPw==
+PASSED
+tests/test_06_cifrado.py::test_expediente_muestra_dpi_enmascarado PASSED
+tests/test_06_cifrado.py::test_estudiante_no_ve_expediente_ajeno PASSED
+tests/test_06_cifrado.py::test_integridad_gcm_detecta_alteracion PASSED
+tests/test_06_cifrado.py::test_aad_impide_mover_cifrado_a_otro_registro PASSED
+tests/test_06_cifrado.py::test_nonce_unico PASSED
+tests/test_06_cifrado.py::test_rotacion_de_clave PASSED
+tests/test_07_secretos.py::test_secreto_desde_variable_de_entorno PASSED
+tests/test_07_secretos.py::test_falla_cerrado_si_falta PASSED
+tests/test_07_secretos.py::test_secreto_desde_archivo_run_secrets PASSED
+tests/test_07_secretos.py::test_secreto_desde_vault PASSED
+tests/test_07_secretos.py::test_codigo_fuente_sin_secretos  7:54PM INF scanned ~96768 bytes (96.77 KB) in 21.1ms
+7:54PM INF no leaks found
+
+PASSED
+tests/test_08_gitleaks.py::test_gitleaks_detecta_fuga_en_historial PASSED
+tests/test_09_tls.py::test_https_tls13_certificado_valido 
+[TLS] versión=TLSv1.3 suite=TLS_AES_256_GCM_SHA384 CN=localhost
+PASSED
+tests/test_09_tls.py::test_rechaza_tls_antiguo PASSED
+tests/test_09_tls.py::test_cliente_rechaza_certificado_no_confiable PASSED
+tests/test_10_logging.py::test_login_fallido_registra_sin_contrasena 
+[evento] {"ts": "2026-10-31T19:54:19-0600", "level": "WARNING", "event": "login_fallido", "msg": "Inicio de sesión fallido", "user": "e***@ejemplo.edu.gt", "ip": "127.0.0.1", "motivo": "credenciales_invalidas"}
+PASSED
+tests/test_10_logging.py::test_eventos_de_auditoria PASSED
+tests/test_10_logging.py::test_filtro_redacta_aunque_el_desarrollador_se_equivoque 
+[evento redactado] {"ts": "2026-10-31T19:54:20-0600", "level": "INFO", "event": "prueba", "msg": "conexion password=[REDACTADO] user=x\\nFALSO login_ok admin", "token": "[REDACTADO]", "authorization": "[REDACTADO]", "dsn": "[REDACTADO]", "dpi": "[REDACTADO]", "nota": "[AWS-KEY-REDACTADA]"}
+PASSED
+tests/test_10_logging.py::test_registro_inseguro_vs_seguro 
+[log INSEGURO] 2026-10-31 19:54:21,520 login user=est@ejemplo.edu.gt password=MiClaveSecreta-Equivocada-77 token=Bearer token-ficticio-123
+PASSED
+tests/test_10_logging.py::test_error_interno_no_expone_detalles 
+[usuario ve] código de incidente 9446a0b84bae
+[log interno] {"ts": "2026-10-31T19:54:22-0600", "level": "ERROR", "event": "error_interno", "msg": "Error interno", "incidente": "9446a0b84bae", "ruta": "/lab/forzar-error", "exc": "Traceback (most recent call last):\\n  File \"/usr/local/lib/python3.13/site-packages/flask/app.py\", line 917, in full_dispatch_request\\n    rv = self.dispatch_request()\\n  File \"/usr/local/lib/python3.13/site-packages/flask/ap
+PASSED
+
+============================= 58 passed in 22.70s ==============================

@@ -1,0 +1,5 @@
+{% extends "base.html" %}{% block body %}
+<h1>Ocurrió un problema ({{ code }})</h1>
+<p>No fue posible completar la solicitud.</p>
+{% if incidente %}<p>Si el problema persiste, comunique este código a soporte: <code>{{ incidente }}</code></p>{% endif %}
+{% endblock %}

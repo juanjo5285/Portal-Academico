@@ -1,0 +1,79 @@
+
+==============================================================================
+PRUEBA 1 · SQL Injection en la búsqueda
+==============================================================================
+
+[VULNERABLE] q="' OR '1'='1"
+  SQL armado: SELECT carnet, nombres, apellidos FROM estudiantes WHERE nombres LIKE '%' OR '1'='1%' OR apellidos LIKE '%' OR '1'='1%'
+  filas devueltas: [['1290-23-10001', 'Ana Lucía', 'Pérez Gómez'], ['1290-23-10002', 'Carlos', "O'Brien Ruiz"], ['1290-23-10003', 'María José', 'López'], ['1290-22-20004', 'José', 'Hernández']]
+[CORREGIDO ] q="' OR '1'='1" -> 0 resultado; ¿filtró config_interna? False
+
+[VULNERABLE] q="x' UNION SELECT clave, valor, 1 FROM config_interna --"
+  SQL armado: SELECT carnet, nombres, apellidos FROM estudiantes WHERE nombres LIKE '%x' UNION SELECT clave, valor, 1 FROM config_interna --%' OR apellidos LIKE '%x' UNION SELECT clave, valor, 1 FROM config_interna --%'
+  filas devueltas: [['nota_interna', 'DATO-QUE-NO-DEBE-FILTRARSE', 1]]
+[CORREGIDO ] q="x' UNION SELECT clave, valor, 1 FROM config_interna --" -> 0 resultado; ¿filtró config_interna? False
+[CORREGIDO ] búsqueda legítima q="O'Brien" -> 1 resultado
+
+==============================================================================
+PRUEBA 2 · Comentario con contenido HTML/JS
+==============================================================================
+[CORREGIDO ] HTML entregado al navegador: &lt;script&gt;alert(&#39;XSS&#39;)&lt;/script&gt;&lt;img src=x onerror=alert(1)&gt;
+             CSP: default-src 'self'; script-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'self'
+[VULNERABLE] HTML entregado al navegador: <script>alert('XSS')</script><img src=x onerror=alert(1)>
+
+==============================================================================
+PRUEBA 3 · Contraseña almacenada con KDF y sal
+==============================================================================
+  admin@ejemplo.edu.gt         $argon2id$v=19$m=65536,t=3,p=1$ZwsTUcYD+YuwrMcvVK7FkQ$43O+ii…
+
+==============================================================================
+PRUEBA 4 · Contraseña incorrecta
+==============================================================================
+  HTTP 401 · mensaje: Correo o contraseña incorrectos.
+
+==============================================================================
+PRUEBA 6 · Secreto obtenido desde fuente externa
+==============================================================================
+  grep de secretos en app/: ['        SECRET_KEY=get_secret("FLASK_SECRET_KEY"),', '        init_db(app.extensions["cipher"], hash_password, get_secret("ADMIN_INITIAL_PASSWORD"))']
+  Origen: variables de entorno cargadas desde .env (permisos 0o600 ) — el archivo está en .gitignore
+
+==============================================================================
+PRUEBA 7 · HTTPS
+==============================================================================
+  https://localhost:8443/login -> 200; HSTS: max-age=31536000; includeSubDomains
+
+==============================================================================
+PRUEBA 8 · Inicio de sesión fallido en el log (sin contraseña)
+==============================================================================
+  {"ts": "2026-10-31T19:52:47-0600", "level": "WARNING", "event": "login_fallido", "msg": "Inicio de sesión fallido", "user": "a***@ejemplo.edu.gt", "ip": "127.0.0.1", "motivo": "credenciales_invalidas"}
+  ¿Aparece la contraseña probada?  False
+
+==============================================================================
+PRUEBA 9 · Error interno
+==============================================================================
+  HTTP 500 · lo que ve el usuario: <h1>Ocurrió un problema (500)</h1> <p>No fue posible completar la solicitud.</p> <p>Si el problema persiste, comunique este código a soporte: <code>20cf1165259d</code></p>
+    ¿respuesta contiene 'postgres://'…? False
+    ¿respuesta contiene 'Bearer'…? False
+    ¿respuesta contiene 'Traceback'…? False
+    ¿respuesta contiene '_EwuGhOw03Tr'…? False
+  Log interno (redactado): {"ts": "2026-10-31T19:52:47-0600", "level": "ERROR", "event": "error_interno", "msg": "Error interno", "incidente": "20cf1165259d", "ruta": "/lab/forzar-error", "exc": "Traceback (most recent call last):\\n  File \"/usr/local/lib/python3.13/site-packages/flask/app.py\", line 917, in full_dispatch_request\\n    rv = self.dispatch_request()\\n  File \"/usr/local/lib/python3.13/site-packages/flask/app.py\", line 902, in …
+
+==============================================================================
+EXTRA · Inyección de comandos en reportes
+==============================================================================
+[VULNERABLE] cmd: mkdir -p /home/claude/portal-seguro/lab/reportes && echo curso,nota > /home/claude/portal-seguro/lab/reportes/x; touch lab/PWNED; echo.csv && tar -czf /home/claude/portal-seguro/lab/reportes/x; touch lab/PWNED; echo.tar.gz -C /home/claude/portal-seguro/lab/reportes x; touch lab/PWNED; echo.csv
+             ¿se creó lab/PWNED? True
+[CORREGIDO ] HTTP 400; ¿se creó lab/PWNED? False
+[CORREGIDO ] reporte legítimo: HTTP 200, attachment; filename=notas_1290-23-10001.tar.gz
+
+==============================================================================
+EXTRA · DPI cifrado en la base de datos
+==============================================================================
+  1290-23-10001  enc:v1:1ARYUnvTXOGZCDUoanVPt/3Zthwe691cDMQhINVzSsiPkfc1BY86UzzuJw==
+  1290-23-10002  enc:v1:d5G2ffOBL3qJ62mNjPNlJPhw5Ax1NPQuQhYuUeA0wkxF55It6XQfAFdXqw==
+
+==============================================================================
+EXTRA · Registro inseguro (endpoint vulnerable) vs. seguro
+==============================================================================
+[INSEGURO] 2026-10-31 19:52:47,860 login user=ana.perez@ejemplo.edu.gt password=ClaveFicticia#2026 token=Bearer tok_ficticio_abc123
+[SEGURO  ] {"ts": "2026-10-31T19:52:47-0600", "level": "INFO", "event": "login_ok", "msg": "Inicio de sesión exitoso", "user_id": 1, "rol": "admin", "ip": "127.0.0.1"}

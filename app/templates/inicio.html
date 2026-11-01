@@ -1,0 +1,5 @@
+{% extends "base.html" %}{% block body %}
+<h1>Bienvenido</h1><p>Rol: {{ g.user.rol }}</p>
+{% if g.user.carnet %}<p><a href="{{ url_for('portal.expediente', carnet=g.user.carnet) }}">Ver mi expediente</a></p>{% endif %}
+{% if g.user.rol == 'admin' %}<p><a href="{{ url_for('portal.admin') }}">Panel administrativo</a></p>{% endif %}
+{% endblock %}

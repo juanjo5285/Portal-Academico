@@ -1,0 +1,9 @@
+{% extends "base.html" %}{% block body %}
+<h1>Comentarios</h1>
+<form method="post"><input type="hidden" name="csrf" value="{{ session.csrf }}">
+<textarea id="texto" name="texto" maxlength="1000" required></textarea>
+<p>Vista previa: <span id="preview"></span></p><button>Publicar</button></form>
+{# Jinja2 codifica < > & " ' automáticamente (autoescape). No se usa |safe. #}
+{% for c in comentarios %}<div class="comentario"><b>{{ c.autor }}</b> <small>{{ c.fecha }}</small><p>{{ c.texto }}</p></div>{% endfor %}
+<script src="{{ url_for('static', filename='comentarios.js') }}"></script>
+{% endblock %}

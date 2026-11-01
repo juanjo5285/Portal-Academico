@@ -1,0 +1,18 @@
+$ openssl s_client -connect localhost:8443 -tls1_1 -cipher "DEFAULT@SECLEVEL=0"   # cliente forzado a TLS 1.1
+40A714CA917F0000:error:0A00042E:SSL routines:ssl3_read_bytes:tlsv1 alert protocol version:../ssl/record/rec_layer_s3.c:1599:SSL alert number 70
+New, (NONE), Cipher is (NONE)
+
+$ openssl s_client -connect localhost:8443 -tls1_2 -CAfile certs/ca.crt
+New, TLSv1.2, Cipher is ECDHE-ECDSA-AES256-GCM-SHA384
+    Protocol  : TLSv1.2
+    Verify return code: 0 (ok)
+
+$ openssl s_client -connect localhost:8443 -tls1_3 -CAfile certs/ca.crt
+New, TLSv1.3, Cipher is TLS_AES_256_GCM_SHA384
+Verify return code: 0 (ok)
+
+$ curl https://localhost:8443/login   (sin confiar en la CA del laboratorio)
+000 -> curl: (60) SSL certificate problem: unable to get local issuer certificate
+
+$ curl http://localhost:8443/login   (HTTP plano contra el puerto TLS)
+curl: (56) Recv failure: Connection reset by peer

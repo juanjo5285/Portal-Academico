@@ -1,0 +1,6 @@
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Fixtures de prueba con secretos ficticios intencionales"
+paths = ['''tests/''', '''docs/evidencias/''']

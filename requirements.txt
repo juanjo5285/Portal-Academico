@@ -1,0 +1,4 @@
+flask>=3.0
+cryptography>=44     # AES-GCM y Argon2id (con formato PHC)
+requests>=2.31       # cliente de HashiCorp Vault (KV v2)
+pytest>=8

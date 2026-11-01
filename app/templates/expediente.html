@@ -1,0 +1,9 @@
+{% extends "base.html" %}{% block body %}
+<h1>Expediente {{ est.carnet }}</h1>
+<p>{{ est.nombres }} {{ est.apellidos }} · DPI: {{ dpi_mask }}</p>
+<table><tr><th>Curso</th><th>Nota</th></tr>
+{% for n in notas %}<tr><td>{{ n.curso }}</td><td>{{ n.nota }}</td></tr>{% endfor %}</table>
+<form method="post" action="{{ url_for('portal.reporte') }}"><input type="hidden" name="csrf" value="{{ session.csrf }}">
+<input type="hidden" name="carnet" value="{{ est.carnet }}"><select name="tipo"><option>notas</option><option>asistencia</option></select>
+<button>Descargar reporte</button></form>
+{% endblock %}

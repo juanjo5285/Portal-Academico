@@ -1,0 +1,4 @@
+{% extends "base.html" %}{% block body %}
+<h1>Panel administrativo</h1><table><tr><th>ID</th><th>Correo</th><th>Rol</th></tr>
+{% for u in usuarios %}<tr><td>{{ u.id }}</td><td>{{ u.email }}</td><td>{{ u.rol }}</td></tr>{% endfor %}</table>
+{% endblock %}

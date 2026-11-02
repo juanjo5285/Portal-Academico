@@ -19,7 +19,7 @@ const B = 'https://localhost:8443', D = 'docs/evidencias/';
   await page.goto(B + '/login');
   await page.fill('input[name=email]', 'admin@ejemplo.edu.gt');
   await page.fill('input[name=password]', env.ADMIN_INITIAL_PASSWORD);
-  await page.click('button:has-text("Entrar")');
+  await page.click('button.primario');
 
   // XSS almacenado - versión corregida
   await page.goto(B + '/comentarios');
@@ -64,7 +64,7 @@ const B = 'https://localhost:8443', D = 'docs/evidencias/';
   await p2.goto(B + '/login');
   await p2.fill('input[name=email]', 'admin@ejemplo.edu.gt');
   await p2.fill('input[name=password]', 'Contraseña-Incorrecta');
-  await p2.click('button:has-text("Entrar")');
+  await p2.click('button.primario');
   await p2.screenshot({ path: D + 'cap_08_login_fallido.png' });
 
   fs.writeFileSync(D + 'xss_alertas_navegador.txt', alertas.join('\n') + '\n');

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="Sello del Portal Académico (laboratorio)">
+  <circle cx="60" cy="60" r="57" fill="#ffffff" stroke="#b8862b" stroke-width="4"/>
+  <circle cx="60" cy="60" r="47" fill="#1d4f7a"/>
+  <defs><path id="arco" d="M60 60 m-37 0 a37 37 0 1 1 74 0"/></defs>
+  <text font-family="Georgia, serif" font-size="8.6" font-weight="700" fill="#ffffff" letter-spacing="1.2">
+    <textPath href="#arco" startOffset="50%" text-anchor="middle">PORTAL ACADÉMICO</textPath>
+  </text>
+  <path d="M60 38 L78 44 V58 C78 70 70 77 60 81 C50 77 42 70 42 58 V44 Z" fill="#ffffff"/>
+  <path d="M48 54 C52 51 56 51 60 54 C64 51 68 51 72 54 V68 C68 65 64 65 60 68 C56 65 52 65 48 68 Z" fill="#1d4f7a"/>
+  <path d="M60 54 V68" stroke="#ffffff" stroke-width="1.5"/>
+  <text x="60" y="94" font-family="Georgia, serif" font-size="7.5" font-weight="700" fill="#f2d48b" text-anchor="middle" letter-spacing="1">LAB · MASI</text>
+</svg>

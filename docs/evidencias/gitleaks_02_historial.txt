@@ -1,40 +1,40 @@
 Finding:     REDACTED
 Secret:      REDACTED
 RuleID:      aws-access-token
-Entropy:     3.721928
+Entropy:     3.684184
 File:        config.py
 Line:        2
-Commit:      e94895278e406bb1dbeacc2f5fababc9321478bd
+Commit:      f9afd5e56abb5208259e2bb8212e6715df95c55c
 Author:      Estudiante MASI
 Email:       estudiante@ejemplo.edu.gt
-Date:        2026-11-01T01:54:47Z
-Fingerprint: e94895278e406bb1dbeacc2f5fababc9321478bd:config.py:aws-access-token:2
-
-Finding:     AWS_SECRET_ACCESS_KEY = "REDACTED"
-Secret:      REDACTED
-RuleID:      generic-api-key
-Entropy:     4.821928
-File:        config.py
-Line:        3
-Commit:      e94895278e406bb1dbeacc2f5fababc9321478bd
-Author:      Estudiante MASI
-Email:       estudiante@ejemplo.edu.gt
-Date:        2026-11-01T01:54:47Z
-Fingerprint: e94895278e406bb1dbeacc2f5fababc9321478bd:config.py:generic-api-key:3
+Date:        2026-11-01T23:43:24Z
+Fingerprint: f9afd5e56abb5208259e2bb8212e6715df95c55c:config.py:aws-access-token:2
 
 Finding:     REDACTED
 Secret:      REDACTED
 RuleID:      github-pat
-Entropy:     4.921928
+Entropy:     4.703056
 File:        config.py
 Line:        4
-Commit:      e94895278e406bb1dbeacc2f5fababc9321478bd
+Commit:      f9afd5e56abb5208259e2bb8212e6715df95c55c
 Author:      Estudiante MASI
 Email:       estudiante@ejemplo.edu.gt
-Date:        2026-11-01T01:54:47Z
-Fingerprint: e94895278e406bb1dbeacc2f5fababc9321478bd:config.py:github-pat:4
+Date:        2026-11-01T23:43:24Z
+Fingerprint: f9afd5e56abb5208259e2bb8212e6715df95c55c:config.py:github-pat:4
 
-7:54PM INF 2 commits scanned.
-7:54PM INF scanned ~380 bytes (380 bytes) in 158ms
-7:54PM WRN leaks found: 3
+Finding:     AWS_SECRET_ACCESS_KEY = "REDACTED"
+Secret:      REDACTED
+RuleID:      generic-api-key
+Entropy:     4.853056
+File:        config.py
+Line:        3
+Commit:      f9afd5e56abb5208259e2bb8212e6715df95c55c
+Author:      Estudiante MASI
+Email:       estudiante@ejemplo.edu.gt
+Date:        2026-11-01T23:43:24Z
+Fingerprint: f9afd5e56abb5208259e2bb8212e6715df95c55c:config.py:generic-api-key:3
+
+5:43PM INF 2 commits scanned.
+5:43PM INF scanned ~380 bytes (380 bytes) in 208ms
+5:43PM WRN leaks found: 3
 exit=1

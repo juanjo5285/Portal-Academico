@@ -2,6 +2,7 @@
 # Simulación controlada de fuga de credenciales en Git y detección con Gitleaks.
 # Todas las credenciales se generan al azar en este momento: son FICTICIAS.
 set -uo pipefail
+export PATH="$PATH:$(pwd)"          # permite gitleaks / gitleaks.exe en la carpeta del proyecto
 DEMO=${1:-lab/demo-fuga}
 OUT=${2:-docs/evidencias}
 rm -rf "$DEMO" && mkdir -p "$DEMO" "$OUT"

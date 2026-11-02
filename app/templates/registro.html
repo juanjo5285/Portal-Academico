@@ -1,8 +1,21 @@
-{% extends "base.html" %}{% block body %}
-<h1>Registro de estudiante</h1>
-<form method="post"><input type="hidden" name="csrf" value="{{ session.csrf }}">
-<label>Correo <input name="email" type="email" required maxlength="254"></label>
-<label>Carnet <input name="carnet" required pattern="\d{4}-\d{2}-\d{3,6}" placeholder="1290-23-10001"></label>
-<label>Contraseña (12+ caracteres) <input name="password" type="password" minlength="12" maxlength="128" required autocomplete="new-password"></label>
-<button>Registrar</button></form>
+{% extends "base.html" %}{% block titulo %}Registro{% endblock %}
+{% block contenido %}
+<section class="tarjeta acceso">
+  <img class="sello" src="{{ url_for('static', filename='logo.svg') }}" alt="Sello del Portal Académico">
+  <h1>Registro de estudiante</h1>
+  {% for m in get_flashed_messages() %}<p class="flash">{{ m }}</p>{% endfor %}
+  <form method="post">
+    <input type="hidden" name="csrf" value="{{ session.csrf }}">
+    <label for="email">Correo electrónico <span class="req">*</span></label>
+    <input id="email" name="email" type="email" required maxlength="254" autocomplete="email">
+    <label for="carnet">Carnet <span class="req">*</span></label>
+    <input id="carnet" name="carnet" required pattern="\d{4}-\d{2}-\d{3,6}" placeholder="1290-23-10001">
+    <p class="ayuda">Carnets inscritos (ficticios): 1290-23-10001, 1290-23-10002, 1290-23-10003, 1290-22-20004.</p>
+    <label for="password">Contraseña <span class="req">*</span></label>
+    <input id="password" name="password" type="password" minlength="12" maxlength="128" required autocomplete="new-password">
+    <p class="ayuda">Mínimo 12 caracteres.</p>
+    <button class="primario">Registrar</button>
+  </form>
+  <p class="enlaces"><a href="{{ url_for('portal.login') }}">Ya tengo cuenta · Iniciar sesión</a></p>
+</section>
 {% endblock %}

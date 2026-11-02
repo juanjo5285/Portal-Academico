@@ -19,7 +19,24 @@ import subprocess
 import tempfile
 from pathlib import Path
 
-TAR = shutil.which("tar") or "/usr/bin/tar"   # Windows 10+ incluye tar.exe (bsdtar)
+
+def _find_tar():
+    """Ruta ABSOLUTA del tar del sistema (nunca uno que aparezca primero en PATH).
+
+    En Windows se usa el tar.exe propio (bsdtar, System32): el tar GNU que trae Git
+    interpreta "C:\\..." como un host remoto ("C") y falla.
+    """
+    if os.name == "nt":
+        win_tar = os.path.join(os.environ.get("SYSTEMROOT", r"C:\Windows"), "System32", "tar.exe")
+        if os.path.isfile(win_tar):
+            return win_tar
+    for candidate in ("/usr/bin/tar", "/bin/tar"):
+        if os.path.isfile(candidate):
+            return candidate
+    return shutil.which("tar") or "tar"
+
+
+TAR = _find_tar()
 
 # Entorno mínimo: el hijo NO hereda variables con secretos (FLASK_SECRET_KEY, DATA_KEY...).
 if os.name == "nt":

@@ -1,15 +1,31 @@
 <!doctype html>
-<html lang="es"><head><meta charset="utf-8"><title>Portal Académico (laboratorio)</title>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block titulo %}Portal Académico{% endblock %} · Laboratorio MASI</title>
+<link rel="icon" href="{{ url_for('static', filename='logo.svg') }}" type="image/svg+xml">
 <link rel="stylesheet" href="{{ url_for('static', filename='estilo.css') }}"></head>
 <body>
-<header><strong>Portal Académico · Laboratorio MASI</strong>
-{% if session.uid %}<nav><a href="{{ url_for('portal.inicio') }}">Inicio</a>
-<a href="{{ url_for('portal.comentarios') }}">Comentarios</a>
-<a href="{{ url_for('portal.buscar') }}">Búsqueda</a>
-<form method="post" action="{{ url_for('portal.logout') }}" class="inline">
-<input type="hidden" name="csrf" value="{{ session.csrf }}"><button>Salir</button></form></nav>{% endif %}
+<header class="topbar">
+  <a class="marca" href="{{ url_for('portal.inicio') }}">
+    <img src="{{ url_for('static', filename='logo.svg') }}" alt="">
+    <span><b>PORTAL</b><small>Académico</small></span>
+  </a>
+  {% if session.uid %}
+  <nav>
+    <a href="{{ url_for('portal.inicio') }}">Inicio</a>
+    <a href="{{ url_for('portal.comentarios') }}">Comentarios</a>
+    <a href="{{ url_for('portal.buscar') }}">Búsqueda</a>
+    <form method="post" action="{{ url_for('portal.logout') }}" class="inline">
+      <input type="hidden" name="csrf" value="{{ session.csrf }}"><button>Salir</button></form>
+  </nav>
+  {% endif %}
 </header>
 <main>
-{% for m in get_flashed_messages() %}<p class="flash">{{ m }}</p>{% endfor %}
-{% block body %}{% endblock %}
-</main></body></html>
+{% block contenido %}
+<section class="tarjeta">
+  {% for m in get_flashed_messages() %}<p class="flash">{{ m }}</p>{% endfor %}
+  {% block body %}{% endblock %}
+</section>
+{% endblock %}
+</main>
+<footer class="banda-lab">Laboratorio de Seguridad en Aplicaciones · todos los datos son ficticios</footer>
+</body></html>

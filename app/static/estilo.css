@@ -1,5 +1,123 @@
-body{font-family:system-ui,sans-serif;max-width:900px;margin:auto;padding:1rem;color:#222}
-header{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #ccc;padding-bottom:.5rem}
-nav a,nav form{margin-left:1rem}.inline{display:inline}label{display:block;margin:.5rem 0}
-table{border-collapse:collapse}td,th{border:1px solid #ccc;padding:.3rem .6rem}.flash{background:#fff3cd;padding:.5rem}
-.comentario{border-bottom:1px solid #eee;padding:.5rem 0}textarea{width:100%;height:5rem}
+/* Estilos del portal. Todo en archivo externo: la CSP (default-src 'self')
+   bloquea estilos en línea, así que no se usa style="" ni <style>. */
+:root {
+  --azul: #12355b;
+  --azul-claro: #1d4f7a;
+  --boton: #2463c9;
+  --texto: #1f2933;
+  --gris: #5b6672;
+  --borde: #c3cbd4;
+  --fondo-tarjeta: #ffffff;
+  --peligro: #b3261e;
+  --exito: #1b7f3b;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; min-height: 100%; }
+body {
+  font-family: "Segoe UI", "Lato", system-ui, -apple-system, sans-serif;
+  color: var(--texto);
+  background: var(--azul);
+  display: flex; flex-direction: column; min-height: 100vh;
+}
+
+/* ---------- Barra superior */
+.topbar {
+  background: #f4f5f6; border-bottom: 1px solid #d9dde1;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 24px; min-height: 64px;
+}
+.marca { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+.marca img { width: 40px; height: 40px; }
+.marca span { display: flex; flex-direction: column; line-height: 1.05; }
+.marca b { color: #b3261e; font-size: 15px; letter-spacing: 1.5px; }
+.marca small { color: var(--azul); font-size: 19px; font-weight: 700; }
+nav { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+nav a {
+  color: var(--azul); text-decoration: none; padding: 8px 12px; border-radius: 6px; font-size: 15px;
+}
+nav a:hover { background: #e3e8ee; }
+nav .usuario { color: var(--gris); font-size: 14px; margin: 0 6px; }
+nav button {
+  background: none; border: 1px solid var(--borde); border-radius: 6px; padding: 7px 12px;
+  color: var(--azul); cursor: pointer; font: inherit; font-size: 14px;
+}
+nav button:hover { background: #e3e8ee; }
+.inline { display: inline; margin: 0; }
+
+/* ---------- Contenido */
+main { flex: 1; padding: 40px 16px; }
+.tarjeta {
+  background: var(--fondo-tarjeta); max-width: 960px; margin: 0 auto;
+  padding: 32px 40px; border-radius: 4px; box-shadow: 0 2px 10px rgba(0, 0, 0, .18);
+}
+.tarjeta h1 { font-weight: 400; font-size: 28px; margin-top: 0; }
+
+/* ---------- Tarjeta de acceso (login / registro) */
+.acceso { max-width: 572px; padding: 56px 100px 40px; text-align: left; }
+.acceso .sello { display: block; width: 120px; height: 120px; margin: 0 auto 28px; }
+.acceso h1 { font-size: 28px; margin-bottom: 28px; }
+label { display: block; font-weight: 600; font-size: 15px; margin: 18px 0 8px; }
+label .req { color: var(--peligro); font-weight: 400; }
+input[type=email], input[type=password], input[type=text], input:not([type]), select, textarea {
+  width: 100%; padding: 9px 12px; font: inherit; font-size: 15px;
+  border: 1px solid #8d959f; border-radius: 4px; background: #fff; color: var(--texto);
+}
+input:focus, select:focus, textarea:focus { outline: 2px solid var(--boton); outline-offset: 1px; border-color: var(--boton); }
+.ayuda { color: var(--gris); font-size: 13px; margin-top: 6px; }
+button.primario, .primario {
+  width: 100%; margin-top: 28px; padding: 10px; font: inherit; font-size: 16px;
+  background: var(--boton); color: #fff; border: 1px solid #1b4fa3; border-radius: 4px; cursor: pointer;
+}
+button.primario:hover { background: #1b4fa3; }
+.enlaces { text-align: center; margin-top: 18px; line-height: 2; }
+.enlaces a, .pie a { color: var(--boton); text-decoration: none; }
+.enlaces a:hover, .pie a:hover { text-decoration: underline; }
+.pie { text-align: center; margin-top: 28px; font-size: 13px; color: var(--gris); }
+.pie strong { display: block; margin-top: 12px; font-size: 18px; color: var(--texto); letter-spacing: .3px; }
+
+/* ---------- Mensajes */
+.flash {
+  border-left: 4px solid #c58a00; background: #fff6dd; padding: 10px 14px;
+  border-radius: 4px; margin: 0 0 18px; font-size: 15px;
+}
+
+/* ---------- Tablas y formularios internos */
+table { border-collapse: collapse; width: 100%; margin: 16px 0; font-size: 15px; }
+th { text-align: left; background: #eef2f6; color: var(--azul); font-weight: 600; }
+td, th { border-bottom: 1px solid #dfe4ea; padding: 10px 12px; }
+tr:hover td { background: #f8fafc; }
+td a { color: var(--boton); text-decoration: none; font-weight: 600; }
+.fila { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.fila input, .fila select { width: auto; flex: 1; min-width: 200px; }
+.fila button, .boton {
+  padding: 9px 18px; font: inherit; font-size: 15px; background: var(--boton); color: #fff;
+  border: 1px solid #1b4fa3; border-radius: 4px; cursor: pointer; text-decoration: none;
+}
+.fila button:hover, .boton:hover { background: #1b4fa3; }
+.datos { color: var(--gris); margin-top: -8px; }
+.menu-inicio { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; margin-top: 24px; }
+.menu-inicio a {
+  border: 1px solid #dfe4ea; border-radius: 6px; padding: 18px; text-decoration: none; color: var(--texto);
+}
+.menu-inicio a:hover { border-color: var(--boton); box-shadow: 0 2px 8px rgba(36, 99, 201, .15); }
+.menu-inicio b { display: block; color: var(--azul); margin-bottom: 4px; }
+.menu-inicio span { color: var(--gris); font-size: 14px; }
+
+/* ---------- Comentarios */
+textarea { min-height: 96px; resize: vertical; }
+.preview { color: var(--gris); font-size: 14px; margin: 8px 0 14px; min-height: 1.2em; }
+.comentario { border-bottom: 1px solid #eef1f4; padding: 14px 0; }
+.comentario b { color: var(--azul); }
+.comentario small { color: var(--gris); margin-left: 6px; }
+.comentario p { margin: 6px 0 0; white-space: pre-wrap; word-break: break-word; }
+code { background: #eef2f6; padding: 2px 6px; border-radius: 4px; }
+
+.banda-lab {
+  text-align: center; color: #c9d6e3; font-size: 12.5px; padding: 12px; letter-spacing: .2px;
+}
+
+@media (max-width: 640px) {
+  .acceso { padding: 40px 24px; }
+  .tarjeta { padding: 24px; }
+  .topbar { padding: 10px 14px; }
+}

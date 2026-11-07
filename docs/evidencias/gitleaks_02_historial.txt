@@ -1,40 +1,40 @@
 Finding:     REDACTED
 Secret:      REDACTED
-RuleID:      aws-access-token
-Entropy:     3.684184
-File:        config.py
-Line:        2
-Commit:      f9afd5e56abb5208259e2bb8212e6715df95c55c
-Author:      Estudiante MASI
-Email:       estudiante@ejemplo.edu.gt
-Date:        2026-11-01T23:43:24Z
-Fingerprint: f9afd5e56abb5208259e2bb8212e6715df95c55c:config.py:aws-access-token:2
-
-Finding:     REDACTED
-Secret:      REDACTED
 RuleID:      github-pat
-Entropy:     4.703056
+Entropy:     4.634184
 File:        config.py
 Line:        4
-Commit:      f9afd5e56abb5208259e2bb8212e6715df95c55c
+Commit:      903e7a79be252a234b082a673675601251d5a995
 Author:      Estudiante MASI
 Email:       estudiante@ejemplo.edu.gt
-Date:        2026-11-01T23:43:24Z
-Fingerprint: f9afd5e56abb5208259e2bb8212e6715df95c55c:config.py:github-pat:4
+Date:        2026-11-02T23:25:30Z
+Fingerprint: 903e7a79be252a234b082a673675601251d5a995:config.py:github-pat:4
 
 Finding:     AWS_SECRET_ACCESS_KEY = "REDACTED"
 Secret:      REDACTED
 RuleID:      generic-api-key
-Entropy:     4.853056
+Entropy:     4.803056
 File:        config.py
 Line:        3
-Commit:      f9afd5e56abb5208259e2bb8212e6715df95c55c
+Commit:      903e7a79be252a234b082a673675601251d5a995
 Author:      Estudiante MASI
 Email:       estudiante@ejemplo.edu.gt
-Date:        2026-11-01T23:43:24Z
-Fingerprint: f9afd5e56abb5208259e2bb8212e6715df95c55c:config.py:generic-api-key:3
+Date:        2026-11-02T23:25:30Z
+Fingerprint: 903e7a79be252a234b082a673675601251d5a995:config.py:generic-api-key:3
 
-5:43PM INF 2 commits scanned.
-5:43PM INF scanned ~380 bytes (380 bytes) in 208ms
-5:43PM WRN leaks found: 3
+Finding:     REDACTED
+Secret:      REDACTED
+RuleID:      aws-access-token
+Entropy:     3.746439
+File:        config.py
+Line:        2
+Commit:      903e7a79be252a234b082a673675601251d5a995
+Author:      Estudiante MASI
+Email:       estudiante@ejemplo.edu.gt
+Date:        2026-11-02T23:25:30Z
+Fingerprint: 903e7a79be252a234b082a673675601251d5a995:config.py:aws-access-token:2
+
+5:25PM INF 2 commits scanned.
+5:25PM INF scanned ~380 bytes (380 bytes) in 220ms
+5:25PM WRN leaks found: 3
 exit=1

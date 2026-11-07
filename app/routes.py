@@ -1,6 +1,7 @@
 """Rutas SEGURAS del portal."""
 import hmac
 import secrets
+import time
 from functools import wraps
 from pathlib import Path
 
@@ -70,6 +71,11 @@ def registro():
             flash(f"Dato inválido en {e.field}: {e.msg}")
             return render_template("registro.html"), 400
         db = get_db()
+        # Solo se puede registrar el carnet de un estudiante inscrito (datos ficticios del laboratorio).
+        if not db.execute("SELECT 1 FROM estudiantes WHERE carnet = ?", (carnet,)).fetchone():
+            flash("Si los datos corresponden a un estudiante inscrito, la cuenta quedó creada.")
+            audit("registro_rechazado", "Carnet no inscrito", 30, user=mask_email(email), ip=client_ip())
+            return redirect(url_for("portal.login"))
         try:
             db.execute("INSERT INTO usuarios (email, password_hash, rol, carnet) VALUES (?,?,?,?)",
                        (email, hash_password(pwd), "estudiante", carnet))
@@ -78,7 +84,7 @@ def registro():
             # Mensaje genérico: no revela si el correo ya existe.
             pass
         audit("registro", "Solicitud de registro", user=mask_email(email), ip=client_ip())
-        flash("Si los datos son válidos, la cuenta quedó creada.")
+        flash("Si los datos corresponden a un estudiante inscrito, la cuenta quedó creada.")
         return redirect(url_for("portal.login"))
     return render_template("registro.html")
 
@@ -92,17 +98,37 @@ def login():
             email = V.email(raw_email)
         except V.ValidationError:
             email = None
-        row = get_db().execute("SELECT * FROM usuarios WHERE email = ?", (email,)).fetchone() if email else None
-        ok = verify_password(pwd, row["password_hash"] if row else None)
+        db = get_db()
+        row = db.execute("SELECT * FROM usuarios WHERE email = ?", (email,)).fetchone() if email else None
+        ahora = time.time()
+        bloqueado = bool(row and row["bloqueado_hasta"] and row["bloqueado_hasta"] > ahora)
+        # Se verifica SIEMPRE (también si está bloqueado o no existe) para que el
+        # tiempo de respuesta no revele el estado de la cuenta.
+        ok = verify_password(pwd, row["password_hash"] if row else None) and not bloqueado
         if not ok:
+            motivo = "cuenta_bloqueada" if bloqueado else "credenciales_invalidas"
+            if row and not bloqueado:
+                intentos = row["intentos_fallidos"] + 1
+                limite = current_app.config["LOCKOUT_THRESHOLD"]
+                if intentos >= limite:
+                    hasta = ahora + current_app.config["LOCKOUT_MINUTES"] * 60
+                    db.execute("UPDATE usuarios SET intentos_fallidos=0, bloqueado_hasta=? WHERE id=?",
+                               (hasta, row["id"]))
+                    audit("cuenta_bloqueada", "Cuenta bloqueada por intentos fallidos", 30,
+                          user_id=row["id"], intentos=intentos, ip=client_ip(),
+                          minutos=current_app.config["LOCKOUT_MINUTES"])
+                else:
+                    db.execute("UPDATE usuarios SET intentos_fallidos=? WHERE id=?", (intentos, row["id"]))
+                db.commit()
             audit("login_fallido", "Inicio de sesión fallido", 30,
-                  user=mask_email(raw_email), ip=client_ip(),
-                  motivo="credenciales_invalidas")   # mismo motivo exista o no el usuario
-            flash("Correo o contraseña incorrectos.")
+                  user=mask_email(raw_email), ip=client_ip(), motivo=motivo)
+            # Mismo mensaje en todos los casos: no revela si el correo existe o está bloqueado.
+            flash("Correo o contraseña incorrectos. Tras 5 intentos fallidos la cuenta se bloquea 15 minutos.")
             return render_template("login.html"), 401
+        db.execute("UPDATE usuarios SET intentos_fallidos=0, bloqueado_hasta=NULL WHERE id=?", (row["id"],))
         if needs_rehash(row["password_hash"]):
-            get_db().execute("UPDATE usuarios SET password_hash=? WHERE id=?", (hash_password(pwd), row["id"]))
-            get_db().commit()
+            db.execute("UPDATE usuarios SET password_hash=? WHERE id=?", (hash_password(pwd), row["id"]))
+        db.commit()
         session.clear()                       # evita fijación de sesión
         session["uid"] = row["id"]
         session["csrf"] = secrets.token_urlsafe(32)

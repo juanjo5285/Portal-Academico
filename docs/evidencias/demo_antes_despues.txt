@@ -1,0 +1,111 @@
+﻿Portal temporal (carpeta temporal)  ┬À  2026-11-07 11:19
+
+==============================================================================
+ A. VALIDACI├ôN DE ENTRADAS
+==============================================================================
+  email         'ana.perez@ejemplo.edu.gt'       -> ACEPTADO como 'ana.perez@ejemplo.edu.gt'
+  email         'x@y.com\r\nBcc: z@z.com'        -> RECHAZADO (contiene caracteres de control)
+  carnet        '1290-23-10001'                  -> ACEPTADO como '1290-23-10001'
+  carnet        '1290-23-10001;id'               -> RECHAZADO (formato esperado NNNN-AA-NNNNN)
+  nombre        "O'Brien"                        -> ACEPTADO como "O'Brien"
+  nombre        'Ana<script>'                    -> RECHAZADO (solo letras, espacios, ap├│strofo o guion)
+  calificacion  '87.456'                         -> ACEPTADO como 87.46
+  calificacion  'NaN'                            -> RECHAZADO (rango permitido 0-100)
+
+  Validar no basta: O'Brien es v├ílido y aun as├¡ rompe un SQL concatenado:
+    SELECT * FROM estudiantes WHERE apellidos = 'O'Brien'
+
+==============================================================================
+ B. SQL INJECTION ÔÇö ANTES (concatenaci├│n)
+==============================================================================
+
+  payload : "' OR '1'='1"
+  SQL     : SELECT carnet, nombres, apellidos FROM estudiantes WHERE nombres LIKE '%' OR '1'='1%' OR apellidos LIKE '%' OR '1'='1%'
+  filas   : [['1290-23-10001', 'Ana Luc├¡a', 'P├®rez G├│mez'], ['1290-23-10002', 'Carlos', "O'Brien Ruiz"], ['1290-23-10003', 'Mar├¡a Jos├®', 'L├│pez'], ['1290-22-20004', 'Jos├®', 'Hern├índez']]
+
+  payload : "x' UNION SELECT clave, valor, 1 FROM config_interna --"
+  SQL     : SELECT carnet, nombres, apellidos FROM estudiantes WHERE nombres LIKE '%x' UNION SELECT clave, valor, 1 FROM config_interna --%' OR apellidos LIKE '%x' UNION SELECT clave, valor, 1 FROM config_interna --%'
+  filas   : [['nota_interna', 'DATO-QUE-NO-DEBE-FILTRARSE', 1]]
+
+  payload : "O'Brien"
+  SQL     : SELECT carnet, nombres, apellidos FROM estudiantes WHERE nombres LIKE '%O'Brien%' OR apellidos LIKE '%O'Brien%'
+  filas   : near "Brien": syntax error
+
+==============================================================================
+ B. SQL INJECTION ÔÇö DESPU├ëS (consulta parametrizada)
+==============================================================================
+
+  payload : "' OR '1'='1"
+  resultado: 0 resultado(s)
+
+  payload : "x' UNION SELECT clave, valor, 1 FROM config_interna --"
+  resultado: 0 resultado(s)
+
+  payload : "O'Brien"
+  resultado: 1 resultado(s)
+
+  payload : 'Ana'
+  resultado: 1 resultado(s)
+
+  Estructuras SQL distintas para las 4 entradas: 1
+  -> SELECT carnet, nombres, apellidos FROM estudiantes WHERE nombres LIKE ? ESCAPE ? OR apellidos LIKE ? ESCAPE ? ORDER BY apellidos LIMIT 50
+
+==============================================================================
+ C. XSS ÔÇö ANTES (|safe) vs. DESPU├ëS (autoescape + CSP)
+==============================================================================
+  ANTES  : <script>alert('XSS')</script>
+  DESPU├ëS: &lt;script&gt;alert(&#39;XSS&#39;)&lt;/script&gt;
+  CSP    : default-src 'self'; script-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'self'
+
+==============================================================================
+ D. INYECCI├ôN DE COMANDOS ÔÇö ANTES (shell=True) vs. DESPU├ëS (lista, shell=False)
+==============================================================================
+  ANTES  : cmd = echo curso,nota > x & type nul > "C:\Users\FAMBRA~1\AppData\Local\Temp\demo_portal_naee3c9f\PWNED" & echo.csv && tar -czf x & type nul > "C:\Users\FAMBRA~1\AppData\Local\Temp\demo_portal_naee3c9f\PWNED" & echo.tar.gz x & type nul > "C:\Users\FAMBRA~1\AppData\Local\Temp\demo_portal_naee3c9f\PWNED" & echo.csv
+           ┬┐se cre├│ el archivo marcador? True
+  DESPU├ëS: carnet '1290-23-10001; touch C:\\Users\\FAMBRA~1\\AppData\\Local\\Temp\\demo_portal_naee3c9f\\PWNED' -> HTTP 400
+  DESPU├ëS: carnet '$(id)'                                    -> HTTP 400
+  DESPU├ëS: carnet '../../etc/passwd'                         -> HTTP 400
+  DESPU├ëS: carnet '--checkpoint-action=exec=id'              -> HTTP 400
+           ┬┐se cre├│ el archivo marcador? False
+  Reporte leg├¡timo -> HTTP 200 ┬À attachment; filename=notas_1290-23-10001.tar.gz
+
+==============================================================================
+ E. CONTRASE├æAS ÔÇö SHA-256 sin sal vs. Argon2id
+==============================================================================
+  SHA-256 #1 : 4eac334ba63171b5b57bbbfaa27fae4c6be4398c368f7d6136c8fb1c6d90074e
+  SHA-256 #2 : 4eac334ba63171b5b57bbbfaa27fae4c6be4398c368f7d6136c8fb1c6d90074e (id├®ntico: sin sal)
+  Argon2id #1: $argon2id$v=19$m=65536,t=3,p=1$sepoPiCwcvIWqWV3vLkYHQ$wNRFph4i9JtmelsOnsGLOBfQfyJ6SNweH3Fzq9rcX7s
+  Argon2id #2: $argon2id$v=19$m=65536,t=3,p=1$1SF8Y81KuGEPC8ZZVdRltA$V2w67xogPZKzjNq9i9IUWfHxTad0mN5Qr6wRgm0aHkA (distinto: sal aleatoria)
+  Verificaci├│n correcta / incorrecta: True / False
+  Benchmark: SHA-256 1,120,443 intentos/s ┬À Argon2id 7.2 intentos/s -> atacar SHA-256 es ~155,142 veces m├ís r├ípido
+  Bloqueo: tras 5 fallos, el 6.┬║ intento CON la clave correcta -> HTTP 401 (rechazado)
+
+==============================================================================
+ F. CIFRADO EN REPOSO (AES-256-GCM)
+==============================================================================
+  Valor en la BD  : enc:v1:H7choXa/PQAeoHGlhogOhG5YG3VTKtWDawUMMRWPMZy0nky3vlaZSaGFSw==
+  ┬┐DPI en claro en el archivo de la BD? False
+  Un byte alterado -> InvalidTag (integridad GCM)
+  Copiado a otro registro -> InvalidTag (AAD)
+
+==============================================================================
+ G. SECRETOS ÔÇö la aplicaci├│n exige una fuente externa
+==============================================================================
+  Sin FLASK_SECRET_KEY -> SecretNotFound: Secreto requerido no configurado: FLASK_SECRET_KEY
+  Con FLASK_SECRET_KEY en el entorno -> la aplicaci├│n arranca (clave de 43 caracteres, no se imprime)
+
+==============================================================================
+ H. REGISTRO ÔÇö inseguro vs. seguro (mismo intento fallido)
+==============================================================================
+  INSEGURO: 2026-11-07 11:19:10,623 login user=ana@ejemplo.edu.gt password=ClaveFicticia#2026 token=Bearer tok_ficticio_abc123
+  SEGURO  : {"ts": "2026-11-07T11:19:10-06:00", "level": "WARNING", "event": "login_fallido", "msg": "Inicio de sesi├│n fallido", "user": "e***@ejemplo.edu.gt", "ip": "127.0.0.1", "motivo": "cuenta_bloqueada"}
+  SEGURO  : {"ts": "2026-11-07T11:19:10-06:00", "level": "WARNING", "event": "cuenta_bloqueada", "msg": "Cuenta bloqueada por intentos fallidos", "user_id": 2, "intentos": 5, "ip": "127.0.0.1", "minutos": 15}
+  SEGURO  : {"ts": "2026-11-07T11:19:10-06:00", "level": "INFO", "event": "http_request", "msg": "Solicitud HTTP", "metodo": "POST", "ruta": "/lab/vuln/registro", "estado": 200, "ms": 0.3}
+
+==============================================================================
+ I. ERROR INTERNO ÔÇö respuesta al usuario vs. log interno
+==============================================================================
+  Usuario (HTTP 500): Ocurri├│ un problema (500) No fue posible completar la solicitud. Si el problema persiste, comunique este c├│digo a soporte: 229ff9aec01f
+  Log     : incidente 229ff9aec01f ┬À RuntimeError: Fallo de conexi├│n [DSN-REDACTADO] token=Bearer [REDACTADO]
+
+Fin de la demostraci├│n.

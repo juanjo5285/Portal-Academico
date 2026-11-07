@@ -1,14 +1,15 @@
 import logging
 import os
+import time
 from datetime import timedelta
 from pathlib import Path
 
-from flask import Flask, render_template, request
+from flask import Flask, g, render_template, request
 from werkzeug.exceptions import HTTPException
 
 from .config import get_secret, load_data_keys
 from .db import close_db, init_db
-from .logging_setup import new_incident_id, setup_logging
+from .logging_setup import audit, new_incident_id, setup_logging
 from .security.crypto import FieldCipher
 from .security.passwords import hash_password
 
@@ -29,6 +30,8 @@ def create_app(overrides: dict | None = None):
         SESSION_COOKIE_SAMESITE="Lax",
         PERMANENT_SESSION_LIFETIME=timedelta(minutes=30),
         MAX_CONTENT_LENGTH=64 * 1024,
+        LOCKOUT_THRESHOLD=int(os.environ.get("LOCKOUT_THRESHOLD", 5)),
+        LOCKOUT_MINUTES=int(os.environ.get("LOCKOUT_MINUTES", 15)),
         PROPAGATE_EXCEPTIONS=False,
         DEBUG=False,
     )
@@ -59,6 +62,19 @@ def create_app(overrides: dict | None = None):
                                f"token=Bearer eyJhbGciOi.eyJzdWIiOi.c2lnbmF0dXJh")
 
     app.teardown_appcontext(close_db)
+
+    @app.before_request
+    def _inicio():
+        g.t0 = time.perf_counter()
+
+    @app.after_request
+    def http_log(resp):
+        # Registro mínimo de cada solicitud: método, ruta SIN query string, estado y duración.
+        # Nunca cuerpo, cabeceras, cookies ni parámetros (pueden contener datos sensibles).
+        if request.endpoint != "static":
+            audit("http_request", "Solicitud HTTP", metodo=request.method, ruta=request.path,
+                  estado=resp.status_code, ms=round((time.perf_counter() - g.get("t0", time.perf_counter())) * 1000, 1))
+        return resp
 
     @app.after_request
     def security_headers(resp):

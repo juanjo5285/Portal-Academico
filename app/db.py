@@ -8,7 +8,9 @@ CREATE TABLE IF NOT EXISTS usuarios (
     email TEXT UNIQUE NOT NULL,
     password_hash TEXT NOT NULL,          -- cadena PHC Argon2id (incluye la sal)
     rol TEXT NOT NULL CHECK (rol IN ('estudiante','catedratico','admin')),
-    carnet TEXT
+    carnet TEXT,
+    intentos_fallidos INTEGER NOT NULL DEFAULT 0,   -- control de fuerza bruta
+    bloqueado_hasta REAL                            -- epoch; NULL = no bloqueado
 );
 CREATE TABLE IF NOT EXISTS estudiantes (
     carnet TEXT PRIMARY KEY,
@@ -63,6 +65,13 @@ def close_db(_=None):
 def init_db(cipher, hash_password, admin_password):
     db = get_db()
     db.executescript(SCHEMA)
+    # Migración para bases creadas con la versión anterior (sin columnas de bloqueo).
+    cols = {r[1] for r in db.execute("PRAGMA table_info(usuarios)")}
+    if "intentos_fallidos" not in cols:
+        db.execute("ALTER TABLE usuarios ADD COLUMN intentos_fallidos INTEGER NOT NULL DEFAULT 0")
+    if "bloqueado_hasta" not in cols:
+        db.execute("ALTER TABLE usuarios ADD COLUMN bloqueado_hasta REAL")
+    db.commit()
     if db.execute("SELECT COUNT(*) FROM estudiantes").fetchone()[0]:
         return
     for carnet, nom, ape, mail, dpi, tel in ESTUDIANTES:

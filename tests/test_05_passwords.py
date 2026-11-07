@@ -55,3 +55,45 @@ def test_registro_guarda_hash(app):
     with app.app_context():
         h = get_db().execute("SELECT password_hash FROM usuarios WHERE email='nuevo@ejemplo.edu.gt'").fetchone()[0]
     assert h.startswith("$argon2id$") and verify_password("Otra-Clave-Larga-99", h)
+
+
+def test_bloqueo_tras_5_intentos_fallidos(app, env):
+    """Fuerza bruta: tras 5 fallos la cuenta se bloquea, incluso con la clave correcta."""
+    import json
+    c = app.test_client()
+    for _ in range(5):
+        assert login(c, "est@ejemplo.edu.gt", "Clave-Equivocada-2026!").status_code == 401
+    r = login(c, "est@ejemplo.edu.gt", PWD)                 # contraseña CORRECTA
+    assert r.status_code == 401 and c.get("/").status_code == 302
+    eventos = [json.loads(l) for l in open(env["LOG_PATH"], encoding="utf-8") if l.strip()]
+    assert any(e["event"] == "cuenta_bloqueada" for e in eventos)
+    fallidos = [e for e in eventos if e["event"] == "login_fallido"]
+    assert fallidos[-1]["motivo"] == "cuenta_bloqueada"      # el 6.º intento se rechazó por bloqueo
+    # El mensaje es idéntico al de una contraseña incorrecta (no revela el bloqueo).
+    import re
+    r2 = login(app.test_client(), "noexiste@ejemplo.edu.gt", "x")
+    flash = lambda resp: re.search(rb'class="flash">(.*?)<', resp.data).group(1)
+    assert r2.status_code == 401 and flash(r) == flash(r2)
+
+
+def test_bloqueo_expira(app):
+    """Pasado el tiempo de bloqueo, la clave correcta vuelve a funcionar."""
+    from app.db import get_db
+    c = app.test_client()
+    for _ in range(5):
+        login(c, "est@ejemplo.edu.gt", "Clave-Equivocada-2026!")
+    with app.app_context():
+        get_db().execute("UPDATE usuarios SET bloqueado_hasta = 0 WHERE email='est@ejemplo.edu.gt'")
+        get_db().commit()
+    assert login(c, "est@ejemplo.edu.gt", PWD).status_code == 302
+
+
+def test_exito_reinicia_contador(app):
+    from app.db import get_db
+    c = app.test_client()
+    for _ in range(4):
+        login(c, "est@ejemplo.edu.gt", "Clave-Equivocada-2026!")
+    assert login(c, "est@ejemplo.edu.gt", PWD).status_code == 302
+    with app.app_context():
+        n = get_db().execute("SELECT intentos_fallidos FROM usuarios WHERE email='est@ejemplo.edu.gt'").fetchone()[0]
+    assert n == 0

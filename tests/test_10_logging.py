@@ -66,3 +66,11 @@ def test_error_interno_no_expone_detalles(app, env):
     assert ev["incidente"] == inc and "Traceback" in ev["exc"]        # el detalle queda SOLO en el log
     assert env["FLASK_SECRET_KEY"] not in read_log(env)               # ...y también redactado
     print(f"\n[usuario ve] código de incidente {inc}\n[log interno] {json.dumps(ev)[:400]}")
+
+
+def test_log_http_sin_query_string(app, env, cat):
+    """El registro de solicitudes guarda la ruta, nunca los parámetros."""
+    cat.get("/buscar", query_string={"q": "token-ficticio-XYZ"})
+    ev = [e for e in eventos(env) if e["event"] == "http_request" and e["ruta"] == "/buscar"][-1]
+    assert ev["metodo"] == "GET" and ev["estado"] == 200 and "ms" in ev
+    assert "token-ficticio-XYZ" not in read_log(env)

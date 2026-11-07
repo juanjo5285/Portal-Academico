@@ -1,2 +1,2 @@
-78730b9 Mover credenciales a variables de entorno
-f9afd5e Configuración inicial del portal
+9824ce8 Mover credenciales a variables de entorno
+903e7a7 Configuración inicial del portal

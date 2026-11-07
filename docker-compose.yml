@@ -1,0 +1,25 @@
+# Despliegue de referencia con privilegios mínimos (no requerido para el laboratorio).
+#   docker compose up --build
+# Los secretos se montan como archivos en /run/secrets (nunca en la imagen ni en variables visibles).
+services:
+  portal:
+    build: .
+    ports: ["127.0.0.1:8443:8443"]
+    user: "10001"                       # usuario sin privilegios (ver Dockerfile)
+    read_only: true                     # sistema de archivos de solo lectura
+    tmpfs: ["/tmp"]
+    volumes: ["datos:/srv/portal/lab"]  # único directorio con escritura: BD, reportes y logs
+    cap_drop: [ALL]                     # sin capacidades del kernel
+    security_opt: ["no-new-privileges:true"]
+    secrets: [FLASK_SECRET_KEY, DATA_KEY_ACTIVE, DATA_KEY_v1, ADMIN_INITIAL_PASSWORD]
+    environment:
+      SECRETS_DIR: /run/secrets
+      TLS_CERT: /run/secrets/tls_cert
+      TLS_KEY: /run/secrets/tls_key
+volumes:
+  datos:
+secrets:
+  FLASK_SECRET_KEY:       { file: ./secrets/FLASK_SECRET_KEY }
+  DATA_KEY_ACTIVE:        { file: ./secrets/DATA_KEY_ACTIVE }
+  DATA_KEY_v1:            { file: ./secrets/DATA_KEY_v1 }
+  ADMIN_INITIAL_PASSWORD: { file: ./secrets/ADMIN_INITIAL_PASSWORD }

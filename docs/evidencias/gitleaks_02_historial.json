@@ -1,25 +1,5 @@
 [
  {
-  "RuleID": "aws-access-token",
-  "Description": "Identified a pattern that may indicate AWS credentials, risking unauthorized cloud resource access and data breaches on AWS platforms.",
-  "StartLine": 2,
-  "EndLine": 2,
-  "StartColumn": 23,
-  "EndColumn": 42,
-  "Match": "REDACTED",
-  "Secret": "REDACTED",
-  "File": "config.py",
-  "SymlinkFile": "",
-  "Commit": "f9afd5e56abb5208259e2bb8212e6715df95c55c",
-  "Entropy": 3.6841838,
-  "Author": "Estudiante MASI",
-  "Email": "estudiante@ejemplo.edu.gt",
-  "Date": "2026-11-01T23:43:24Z",
-  "Message": "Configuración inicial del portal",
-  "Tags": [],
-  "Fingerprint": "f9afd5e56abb5208259e2bb8212e6715df95c55c:config.py:aws-access-token:2"
- },
- {
   "RuleID": "github-pat",
   "Description": "Uncovered a GitHub Personal Access Token, potentially leading to unauthorized repository access and sensitive content exposure.",
   "StartLine": 4,
@@ -30,14 +10,14 @@
   "Secret": "REDACTED",
   "File": "config.py",
   "SymlinkFile": "",
-  "Commit": "f9afd5e56abb5208259e2bb8212e6715df95c55c",
-  "Entropy": 4.703056,
+  "Commit": "903e7a79be252a234b082a673675601251d5a995",
+  "Entropy": 4.634184,
   "Author": "Estudiante MASI",
   "Email": "estudiante@ejemplo.edu.gt",
-  "Date": "2026-11-01T23:43:24Z",
+  "Date": "2026-11-02T23:25:30Z",
   "Message": "Configuración inicial del portal",
   "Tags": [],
-  "Fingerprint": "f9afd5e56abb5208259e2bb8212e6715df95c55c:config.py:github-pat:4"
+  "Fingerprint": "903e7a79be252a234b082a673675601251d5a995:config.py:github-pat:4"
  },
  {
   "RuleID": "generic-api-key",
@@ -50,13 +30,33 @@
   "Secret": "REDACTED",
   "File": "config.py",
   "SymlinkFile": "",
-  "Commit": "f9afd5e56abb5208259e2bb8212e6715df95c55c",
-  "Entropy": 4.853056,
+  "Commit": "903e7a79be252a234b082a673675601251d5a995",
+  "Entropy": 4.803056,
   "Author": "Estudiante MASI",
   "Email": "estudiante@ejemplo.edu.gt",
-  "Date": "2026-11-01T23:43:24Z",
+  "Date": "2026-11-02T23:25:30Z",
   "Message": "Configuración inicial del portal",
   "Tags": [],
-  "Fingerprint": "f9afd5e56abb5208259e2bb8212e6715df95c55c:config.py:generic-api-key:3"
+  "Fingerprint": "903e7a79be252a234b082a673675601251d5a995:config.py:generic-api-key:3"
+ },
+ {
+  "RuleID": "aws-access-token",
+  "Description": "Identified a pattern that may indicate AWS credentials, risking unauthorized cloud resource access and data breaches on AWS platforms.",
+  "StartLine": 2,
+  "EndLine": 2,
+  "StartColumn": 23,
+  "EndColumn": 42,
+  "Match": "REDACTED",
+  "Secret": "REDACTED",
+  "File": "config.py",
+  "SymlinkFile": "",
+  "Commit": "903e7a79be252a234b082a673675601251d5a995",
+  "Entropy": 3.7464395,
+  "Author": "Estudiante MASI",
+  "Email": "estudiante@ejemplo.edu.gt",
+  "Date": "2026-11-02T23:25:30Z",
+  "Message": "Configuración inicial del portal",
+  "Tags": [],
+  "Fingerprint": "903e7a79be252a234b082a673675601251d5a995:config.py:aws-access-token:2"
  }
 ]
